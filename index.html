@@ -115,9 +115,9 @@ const BUILTIN = [
 /* === 3. Oddiy kasrlar === */
 {
   q:"2¾ + 1⅙ − ⅔ ni hisoblang.",
-  options:["3¼","3¼","3⅝","3¼"],
+  options:["3¼","3½","3⅝","2¾"],
   correct:0,
-  solution:"2¾ = 11/4, 1⅙ = 7/6, ⅔ = 2/3.\nUmumiy maxraj: EKUK(4,6,3)=12.\n11/4 = 33/12; 7/6 = 14/12; 2/3 = 8/12.\n33/12 + 14/12 − 8/12 = 39/12 = 13/4 = 3¼."
+  solution:"2¾ = 11/4, 1⅙ = 7/6, ⅔ = 2/3.\nUmumiy maxraj: EKUK(4,6,3) = 12.\n11/4 = 33/12; 7/6 = 14/12; 2/3 = 8/12.\n33/12 + 14/12 − 8/12 = 39/12 = 13/4 = 3¼."
 },
 /* === 4. O'nli kasrlar === */
 {
@@ -191,7 +191,7 @@ const BUILTIN = [
 },
 /* === 14. Ikki noma'lumli sistema === */
 {
-  q:"{ 3x+2y=16 va x−y=2 sistemasini yeching.",
+  q:"Tenglamalar sistemasini yeching:<br>⎰ 3x + 2y = 16<br>⎱ x − y = 2",
   options:["(4, 2)","(2, 4)","(3, 1)","(5, 0.5)"],
   correct:0,
   solution:"Ikkinchi tenglamadan: x = y+2.\nBirinchiga qo'yamiz: 3(y+2)+2y=16.\n3y+6+2y=16. 5y=10. y=2.\nx = 2+2 = 4.\nYechim: (4, 2).\nTekshirish: 3·4+2·2=16 ✓; 4−2=2 ✓"
@@ -244,7 +244,7 @@ const BUILTIN = [
   solution:"36 = 2²·3², 48 = 2⁴·3.\nEKUB = 2²·3 = 12.\nEKUK = 2⁴·3² = 144.\nTekshirish: 12·144 = 1728 = 36·48 ✓"
 },
 {
-  q:"{ y=3x−1 va y=x+5 sistemasini yeching.",
+  q:"Tenglamalar sistemasini yeching:<br>⎰ y = 3x − 1<br>⎱ y = x + 5",
   options:["(3, 8)","(2, 7)","(3, 7)","(4, 9)"],
   correct:0,
   solution:"Tenglashtirish usuli: 3x−1 = x+5.\n2x = 6, x = 3.\ny = 3·3−1 = 8.\nYechim: (3, 8).\nTekshirish: y=3+5=8 ✓; y=9−1=8 ✓"
@@ -257,9 +257,9 @@ const BUILTIN = [
 },
 {
   q:"5a²b − 3ab² + 2a²b ifodani soddalashtiring. a=2, b=1 da son qiymatini toping.",
-  options:["14","16","12","18"],
-  correct:0,
-  solution:"5a²b − 3ab² + 2a²b = (5+2)a²b − 3ab² = 7a²b − 3ab².\na=2, b=1: 7·4·1 − 3·2·1 = 28 − 6 = 22.\nTo'g'ri yechish: 7(4)(1)−3(2)(1)=28−6=22.\nAmmo tanlovda 14 yaqin... Tekshirish: 5(4)(1)−3(2)(1)+2(4)(1)=20−6+8=22. Javob 22, eng yaqin A."
+  options:["14","16","22","18"],
+  correct:2,
+  solution:"5a²b + 2a²b − 3ab² = 7a²b − 3ab².\na=2, b=1 da: 7·(2²)·1 − 3·2·(1²) = 7·4 − 6 = 28 − 6 = 22.\nJavob: 22."
 },
 {
   q:"Kub qirrasini 3 ga oshirsak, sirtining yuzi necha marta oshadi?",
@@ -296,7 +296,1133 @@ const BUILTIN = [
   options:["S=148 sm², V=120 sm³","S=120 sm², V=148 sm³","S=148 sm², V=100 sm³","S=108 sm², V=120 sm³"],
   correct:0,
   solution:"To'la sirt yuzi: S = 2(ab+bc+ac) = 2(4·5+5·6+4·6) = 2(20+30+24) = 2·74 = 148 sm².\nHajm: V = 4·5·6 = 120 sm³."
+},
+
+/* ===== 2024-YIL HAQIQIY IMTIHON SAVOLLARI ===== */
+
+/* --- 15-iyul varianti --- */
+{
+  q:"Sov\u0121\u02bcani o\u02bcrash uchun tasma 7:9 kabi nisbatda ikki bo\u02bclakka bo\u02bclindi. Agar katta bo\u02bclakning uzunligi 144 sm bo\u02bclsa, tasmaning dastlabki uzunligini (sm) toping.",
+  options:["112 sm","284 sm","256 sm","258 sm"],
+  correct:1,
+  solution:"Nisbat 7:9, katta bo'lak = 9 qism = 144 sm.\n1 qism = 144/9 = 16 sm.\nKichik bo'lak = 7×16 = 112 sm.\nJami uzunlik = 112 + 144 = 256 sm.\nYoki: jami = 144×(7+9)/9 = 144×16/9 = 256 sm.\nJavob: 256 sm → C variant."
+},
+{
+  q:"ABCD to'g'ri to'rtburchakning yuzi 18 sm², BC tomoni 6 sm. DCEF kvadratning perimetrini toping.",
+  options:["16 sm","12 sm","8 sm","10 sm"],
+  correct:1,
+  solution:"ABCD yuzasi = AB×BC = AB×6 = 18 → AB = 3 sm.\nDC = AB = 3 sm (to'g'ri to'rtburchakda qarama-qarshi tomonlar teng).\nDCEF kvadratning tomoni = DC = 3 sm.\nPerimetr = 4×3 = 12 sm."
+},
+{
+  q:"Qutida umumiy og'irligi 6 kg bo'lgan bir xil kitoblar bor. Har bir kitob 400 g bo'lsa, qutida nechta kitob bor?",
+  options:["5 ta","10 ta","12 ta","15 ta"],
+  correct:3,
+  solution:"6 kg = 6000 g.\nKitoblar soni = 6000 / 400 = 15 ta.\nTekshirish: 15 × 400 = 6000 g = 6 kg ✓"
+},
+{
+  q:"To'g'ri burchakli parallelepipedning o'lchamlari: 6 sm, 5 sm, 5 sm. Hajmini (sm³) toping.",
+  options:["150 sm³","25 sm³","30 sm³","120 sm³"],
+  correct:0,
+  solution:"Hajm = uzunlik × kenglik × balandlik = 6 × 5 × 5 = 150 sm³.\nFormula: V = a × b × c."
+},
+{
+  q:"2, 3 va 1 ta besh raqamlaridan foydalanib nechta turli uch xonali son tuzish mumkin?",
+  options:["6 ta","4 ta","3 ta","5 ta"],
+  correct:0,
+  solution:"Raqamlar: 1, 2, 3, 5 — 4 ta turli raqam.\nUch xonali sonlar (takrorlanmasdan): P(4,3) = 4×3×2 = 24 ta.\nAmmo savol: '2 ta, 3 ta va 1 ta besh raqami' deydi — ya'ni {2, 3, 5} uchta raqam.\nBulardan 3 xonali son: 3! = 6 ta (235, 253, 325, 352, 523, 532)."
+},
+{
+  q:"Asilbek kitobni 33 betini o'qidi va u butun kitobning 6%ini tashkil qilsa, kitob necha betlik?",
+  options:["198 bet","330 bet","550 bet","500 bet"],
+  correct:2,
+  solution:"33 bet = 6% bo'lsa, 1% = 33/6 = 5.5 bet.\nJami = 100% = 5.5 × 100 = 550 bet.\nYoki: x × 0.06 = 33 → x = 33/0.06 = 550 bet."
+},
+{
+  q:"a=3,25 va b=1,25 bo'lsa, a²−b² ifodaning qiymatini toping.",
+  options:["10","9","8","7"],
+  correct:1,
+  solution:"a²−b² = (a−b)(a+b).\na−b = 3,25 − 1,25 = 2.\na+b = 3,25 + 1,25 = 4,5.\nNatija = 2 × 4,5 = 9.\nTekshirish: (3,25)² − (1,25)² = 10,5625 − 1,5625 = 9 ✓"
+},
+{
+  q:"Hisoblang: (√49 + √81) / √16",
+  options:["16","8","1","4"],
+  correct:3,
+  solution:"√49 = 7, √81 = 9, √16 = 4.\n(7 + 9) / 4 = 16 / 4 = 4."
+},
+{
+  q:"Ifodani soddalashtiring: −(a−b) + 6 − (b−a+3)",
+  options:["2a","2b","3","2a−2b"],
+  correct:2,
+  solution:"−(a−b) + 6 − (b−a+3)\n= −a+b + 6 − b+a−3\n= (−a+a) + (b−b) + (6−3)\n= 0 + 0 + 3 = 3."
+},
+{
+  q:"4,4 − 1,4 − (1⅔ + 3⅓) ifodaning qiymatini toping.",
+  options:["−2","−1","1","0"],
+  correct:0,
+  solution:"1⅔ + 3⅓ = (5/3) + (10/3) = 15/3 = 5.\n4,4 − 1,4 = 3.\n3 − 5 = −2.\nJavob: −2."
+},
+
+/* --- 16-iyul varianti --- */
+{
+  q:"Hisoblang: |−6| + |−7| − |−12| · |−1|",
+  options:["−1","1","0","−2"],
+  correct:1,
+  solution:"|−6|=6, |−7|=7, |−12|=12, |−1|=1.\n6 + 7 − 12×1 = 13 − 12 = 1."
+},
+{
+  q:"7 ta ot 5 kunda 60 kg yemish yesa, 15 ta ot 14 kunda qancha yemish yeydi?",
+  options:["300 kg","350 kg","360 kg","180 kg"],
+  correct:2,
+  solution:"1 ot 1 kunda: 60/(7×5) = 60/35 = 12/7 kg.\n15 ta ot 14 kunda: 15 × 14 × 12/7 = 15 × 24 = 360 kg."
+},
+{
+  q:"Chizmada uchta burchak: 3x°, 2x°, x° to'g'ri chiziqda. x ning qiymatini toping.",
+  options:["40°","45°","60°","30°"],
+  correct:3,
+  solution:"To'g'ri chiziqda joylashgan burchaklar yig'indisi 180°.\n3x + 2x + x = 6x = 180°.\nx = 30°."
+},
+{
+  q:"Ko'paytuvchilarga ajrating: 51b + 57a",
+  options:["3(17a+19b)","3(19a+17b)","17(3a+2b)","19(3a+2b)"],
+  correct:1,
+  solution:"51b + 57a = 3(17b + 19a) = 3(19a + 17b).\nTekshirish: 3×19a=57a ✓; 3×17b=51b ✓."
+},
+{
+  q:"Jadvaldan: Olma 5000 so'm/kg × 5 kg, Nok 7000 so'm/kg × 6 kg, Apelsin 13000 so'm/kg × 9 kg. Umumiy xarid narxi?",
+  options:["180 000","185 000","184 000","174 000"],
+  correct:2,
+  solution:"Olma: 5000 × 5 = 25 000 so'm.\nNok: 7000 × 6 = 42 000 so'm.\nApelsin: 13000 × 9 = 117 000 so'm.\nJami: 25 000 + 42 000 + 117 000 = 184 000 so'm."
+},
+{
+  q:"Avtomobil 42 minutda 7 km yo'l yursa, uning tezligini (km/h) aniqlang.",
+  options:["10","12","6","60"],
+  correct:0,
+  solution:"42 minut = 42/60 = 0.7 soat.\nTezlik = 7 / 0.7 = 10 km/soat."
+},
+{
+  q:"Zafarda 25 000 so'm, Azizada 13 000 so'm bor. Zafar qanchasini Azizaga bersa, pullari teng bo'ladi?",
+  options:["5000","6000","7000","8000"],
+  correct:1,
+  solution:"Jami pul = 25000+13000 = 38000.\nHar biri = 38000/2 = 19000 so'm.\nZafar berishi kerak = 25000−19000 = 6000 so'm."
+},
+{
+  q:"10 so'mlik va 20 so'mlik pullar yordamida 100 so'm hosil qilishning necha xil usuli bor?",
+  options:["5","6","10","8"],
+  correct:1,
+  solution:"10×a + 20×b = 100. a=10−2b.\nb=0: a=10; b=1: a=8; b=2: a=6; b=3: a=4; b=4: a=2; b=5: a=0.\nJami 6 ta usul."
+},
+{
+  q:"Tenglamani yeching: 2(2x−3) + 3 = 3x",
+  options:["1","2","3","4"],
+  correct:2,
+  solution:"4x−6+3 = 3x.\n4x−3 = 3x.\nx = 3.\nTekshirish: 2(6−3)+3 = 6+3=9=3×3 ✓"
+},
+{
+  q:"Mato 2:3 kabi nisbatda bo'lingan bo'lsa, kichik mato butun matoning necha foizini tashkil etadi?",
+  options:["40%","60%","50%","20%"],
+  correct:0,
+  solution:"Jami qismlar = 2+3 = 5.\nKichik mato = 2/5 qism = 2/5 × 100% = 40%."
+},
+
+/* --- 17-iyul varianti --- */
+{
+  q:"Ifodani soddalashtiring: 3a − 6a³ : 3a²",
+  options:["a","−3a","2a","−2a"],
+  correct:0,
+  solution:"6a³ : 3a² = 2a.\n3a − 2a = a."
+},
+{
+  q:"Kubning to'la sirti 24 sm² ga teng bo'lsa, uning asosi yuzini toping (sm²).",
+  options:["2","9","4","8"],
+  correct:2,
+  solution:"To'la sirt = 6a² = 24 → a² = 4.\nAsosning yuzi = a² = 4 sm²."
+},
+{
+  q:"50 sonining 50% ini 2 ga ko'paytiring.",
+  options:["10","50","25","100"],
+  correct:1,
+  solution:"50 ning 50% = 50 × 0,5 = 25.\n25 × 2 = 50.\nJavob: 50."
+},
+{
+  q:"0, 1, 2, 3 raqamlaridan foydalanib (takrorlanmasdan) eng katta to'rt xonali va eng kichik to'rt xonali sonlar tuzildi. Ularning musbat ayirmasini toping.",
+  options:["2187","1998","1971","2007"],
+  correct:1,
+  solution:"Eng katta: 3210.\nEng kichik (0 boshda bo'lmasin): 1023.\nAyirma: 3210 − 1023 = 2187.\nJavob A=2187."
+},
+{
+  q:"ABCD kvadrat yuzi 9 sm², ABEF to'g'ri to'rtburchakning perimetri 16 sm. CDFE to'g'ri to'rtburchak yuzini toping (sm²).",
+  options:["4 sm²","6 sm²","2 sm²","8 sm²"],
+  correct:1,
+  solution:"ABCD kvadrat: S = 9 → tomon a = 3 sm.\nABEF perimetri: 2(AB + BE) = 2(3 + BE) = 16 → BE = 5 sm.\nCDFE: CD = 3 sm, EF = BE − BC = 5 − 3 = 2 sm.\nS(CDFE) = CD × EF = 3 × 2 = 6 sm²."
+},
+{
+  q:"Sabina 8 ta mavzuga tayyorlanishi kerak. Ulardan bittasini eng ko'pi bilan necha xil usulda tanlaydi?",
+  options:["2","4","1","8"],
+  correct:3,
+  solution:"8 ta mavzudan 1 tasini tanlash = C(8,1) = 8 xil usul."
+},
+
+/* --- 18-iyul varianti --- */
+{
+  q:"Qaysi sonning 8% i 24 ga teng bo'ladi?",
+  options:["30","3","300","192"],
+  correct:2,
+  solution:"x × 8/100 = 24.\nx = 24 × 100/8 = 2400/8 = 300."
+},
+{
+  q:"2:3:4:5 raqamlaridan foydalanib jami nechta ikki xonali son tuzish mumkin? (takrorlanishi mumkin)",
+  options:["12","8","20","16"],
+  correct:3,
+  solution:"4 ta raqam bor (2,3,4,5). Har biri takrorlanishi mumkin.\nIkki xonali son: 4×4 = 16 ta.\n(O'nlar xonasi uchun 4 tanlov, birlar xonasi uchun 4 tanlov.)"
+},
+{
+  q:"Mashina 60 km/h, velosiped 20 km/h qarama-qarshi tomonlarga harakatlanadi. Necha soatdan keyin orasidagi masofa 240 km ga teng bo'ladi?",
+  options:["6","4","10","3"],
+  correct:3,
+  solution:"Yaqinlashish tezligi = 60+20 = 80 km/h.\nt = 240/80 = 3 soat."
+},
+{
+  q:"Tenglamani yeching: −17 + (−28) + 2x = −41",
+  options:["2","4","0","1"],
+  correct:0,
+  solution:"−17−28+2x = −41.\n−45+2x = −41.\n2x = 4.\nx = 2."
+},
+{
+  q:"Metall qotishmasi massasining 3/5 qismini mis tashkil qiladi. 60 kg li metal qotishmaning necha kilogrammini mis tashkil qiladi?",
+  options:["36","24","18","12"],
+  correct:0,
+  solution:"Mis = 60 × 3/5 = 60 × 0.6 = 36 kg."
+},
+{
+  q:"Soddalastiring: −3 − (−2 + a − b) − (b − a) − 1",
+  options:["0","−1","−2","2"],
+  correct:2,
+  solution:"−3 − (−2 + a − b) − (b − a) − 1\n= −3 + 2 − a + b − b + a − 1\n= (−3 + 2 − 1) + (−a + a) + (b − b)\n= −2 + 0 + 0 = −2."
+},
+{
+  q:"Uchburchakning perimetri 27 sm, tomonlari 6, 12 va (2x+1). x ni toping.",
+  options:["1","2","3","4"],
+  correct:3,
+  solution:"6 + 12 + (2x+1) = 27.\n19 + 2x = 27.\n2x = 8.\nx = 4."
+},
+
+/* --- 19-iyul varianti --- */
+{
+  q:"a=5, b=15 bo'lsa, (2a²−b/3)·2 ifodaning qiymatini toping.",
+  options:["80","45","40","90"],
+  correct:0,
+  solution:"2a² = 2×25 = 50. b/3 = 15/3 = 5.\n(50−5)×2 = 45×2 = 90.\nJavob D=90."
+},
+{
+  q:"Hisoblang: −2+(−2)+(−2)+...+(−2) (10 ta) + 22",
+  options:["2","−20","−2","0"],
+  correct:0,
+  solution:"10 ta (−2) = −20.\n−20 + 22 = 2."
+},
+{
+  q:"1, 2, 3, 5 sonlaridan foydalanib nechta takrorlanmaydigan 2 xonali son tuzish mumkin?",
+  options:["16","12","6","8"],
+  correct:1,
+  solution:"4 ta raqam (1,2,3,5), takrorlanmasdan 2 xonali:\nO'nlar uchun 4 tanlov, birlar uchun 3 tanlov = 4×3 = 12 ta."
+},
+{
+  q:"Bo'yi 8m, eni 0.5m, balandligi 2m bo'lgan devorning hajmini toping (m³).",
+  options:["16","8","4","12"],
+  correct:1,
+  solution:"V = 8 × 0.5 × 2 = 8 m³."
+},
+{
+  q:"To'g'ri to'rtburchakning tomonlari 12 sm va 3 sm. Unga tengdosh kvadratning perimetrini toping.",
+  options:["36 sm","12 sm","6 sm","24 sm"],
+  correct:3,
+  solution:"To'g'ri to'rtburchak yuzi = 12×3 = 36 sm².\nTengdosh kvadrat: a² = 36 → a = 6 sm.\nPerimetr = 4×6 = 24 sm."
+},
+{
+  q:"To'g'ri tasdiqni toping: 1) eng kichik natural son 0; 2) eng kichik butun son 0; 3) eng kichik tub son 1; 4) har qanday natural sonning nolinchi darajasi 1 ga teng",
+  options:["1 va 2","faqat 4","1 va 4","2 va 4"],
+  correct:1,
+  solution:"1) Yolg'on — eng kichik natural son 1.\n2) Yolg'on — eng kichik butun son mavjud emas (cheksiz kichik).\n3) Yolg'on — eng kichik tub son 2.\n4) To'g'ri — har qanday a≠0 uchun a⁰=1.\nFaqat 4-tasdiq to'g'ri."
+},
+{
+  q:"400 soni 30% ga oshirildi. Hosil bo'lgan sonning 30% ini toping.",
+  options:["520","150","156","400"],
+  correct:2,
+  solution:"400 ning 30% = 120. Yangi son = 400+120 = 520.\n520 ning 30% = 520×0.3 = 156."
+},
+{
+  q:"Nechta ikki xonali natural son 10 ga qoldiqsiz bo'linadi?",
+  options:["9","10","8","11"],
+  correct:0,
+  solution:"10 ga bo'linadigan ikki xonali sonlar: 10, 20, 30, 40, 50, 60, 70, 80, 90.\nJami: 9 ta."
+},
+
+/* --- 20-iyul varianti --- */
+{
+  q:"Hisoblang: 1:3·4 − 1:3",
+  options:["1/12","1","3/4","4/3"],
+  correct:0,
+  solution:"Amallar tartibi: 1:3·4 = (1/3)·4 = 4/3. Keyin 1:3 = 1/3.\n4/3 − 1/3 = 3/3 = 1.\nYoki: 1:3 = 1/3; (1/3)×4 − 1/3 = 4/3 − 1/3 = 3/3 = 1. Javob B=1."
+},
+{
+  q:"To'g'ri burchakli uchburchakning yuzi 30 sm², bir kateti 5 sm. Ikkinchi katetini toping.",
+  options:["6 sm","15 sm","10 sm","12 sm"],
+  correct:3,
+  solution:"S = (a×b)/2 = 30 → a×b = 60.\na = 5 → b = 60/5 = 12 sm."
+},
+{
+  q:"18 sotix necha m² ga teng?",
+  options:["1800 m²","18 m²","180 m²","0.18 m²"],
+  correct:0,
+  solution:"1 sotix = 1 ar = 100 m².\n18 sotix = 18×100 = 1800 m²."
+},
+{
+  q:"Sarvinozning qadami 45 sm, singlisi Feruzanikining 30 sm. Qanday eng qisqa masofada qadam izlari ustma-ust tushadi? (sm)",
+  options:["180 sm","100 sm","15 sm","90 sm"],
+  correct:3,
+  solution:"EKUK(45, 30) = ?\n45 = 3²×5, 30 = 2×3×5.\nEKUK = 2×3²×5 = 90 sm."
+},
+{
+  q:"4 xil sabzavotdan 2 tadan olib necha xil salat tayyorlash mumkin?",
+  options:["4","8","6","12"],
+  correct:2,
+  solution:"Kombinatsiya: C(4,2) = 4!/(2!×2!) = (4×3)/(2×1) = 6 ta."
+},
+{
+  q:"Sinfda 40 nafar o'quvchi bor. Ularning 55% i o'g'il bolalar bo'lsa, qiz bolalar sonini toping.",
+  options:["14","12","18","22"],
+  correct:2,
+  solution:"O'g'illar = 40×55/100 = 22 ta.\nQizlar = 40−22 = 18 ta."
+},
+{
+  q:"5 dan 32 gacha bo'lgan sonlar orasida nechta 3 ga karrali son bor?",
+  options:["9 ta","10 ta","8 ta","11 ta"],
+  correct:0,
+  solution:"6, 9, 12, 15, 18, 21, 24, 27, 30 — jami 9 ta.\n(5 dan katta, 32 dan kichik, 3 ga karrali.)"
+},
+
+/* --- 21-iyul varianti --- */
+{
+  q:"17 ga bo'linadigan ikki xonali sonlar nechta?",
+  options:["4","5","6","7"],
+  correct:1,
+  solution:"17, 34, 51, 68, 85 — ikki xonali va 17 ga bo'linadigan: 5 ta.\n(17×1=17, ×2=34, ×3=51, ×4=68, ×5=85, ×6=102 — 3 xonali.)"
+},
+{
+  q:"−7 dan 9 gacha nechta butun son bor?",
+  options:["16 ta","14 ta","15 ta","17 ta"],
+  correct:3,
+  solution:"−7, −6, ..., 0, ..., 9: soni = 9−(−7)+1 = 9+7+1 = 17 ta."
+},
+{
+  q:"Ra'no kitobining 60% iga kitob sotib olganidan so'ng, 12 000 so'm puli qoldi. Ra'noda dastlab qancha pul bo'lgan?",
+  options:["30 000","3 000","35 000","72 000"],
+  correct:0,
+  solution:"Sarfladi: 60%. Qoldi: 40% = 12 000 so'm.\n1% = 300 so'm.\nJami = 100% = 30 000 so'm."
+},
+{
+  q:"Kubning hajmi 27 m³ ga teng bo'lsa, uning to'la sirti yuzini toping (m²).",
+  options:["3 m²","12 m²","18 m²","54 m²"],
+  correct:3,
+  solution:"V = a³ = 27 → a = 3 m.\nTo'la sirt = 6a² = 6×9 = 54 m²."
+},
+{
+  q:"Hisoblang: (−5)·(−3) + (−2)·4",
+  options:["7","−7","−22","22"],
+  correct:0,
+  solution:"(−5)×(−3) = 15.\n(−2)×4 = −8.\n15 + (−8) = 7."
+},
+{
+  q:"Uchburchakning balandligi 12 sm, asosi 10 sm. Yuzini toping (sm²).",
+  options:["120 sm²","60 sm²","180 sm²","30 sm²"],
+  correct:1,
+  solution:"S = (asos × balandlik) / 2 = (10 × 12) / 2 = 60 sm²."
+},
+{
+  q:"Tenglamalar sistemasidan x·y ning qiymatini toping:<br>⎰ x = y − 1<br>⎱ x + 2y = 2",
+  options:["1","2","0","4"],
+  correct:2,
+  solution:"x=y−1 ni ikkinchiga: (y−1)+2y=2 → 3y=3 → y=1.\nx=1−1=0.\nx·y = 0×1 = 0."
+},
+{
+  q:"Ota 24 yoshdaligida o'g'il farzandli bo'ldi. Hozir ota o'g'ildan 3 marta katta bo'lsa, o'g'lining yoshini toping.",
+  options:["10","5","6","12"],
+  correct:3,
+  solution:"O'g'il yoshi = x, ota yoshi = 3x.\nOta − o'g'il = 24 (doim).\n3x − x = 24 → 2x = 24 → x = 12."
+},
+
+/* --- 22-iyul varianti --- */
+{
+  q:"Pitsa teng 8 bo'lakka bo'lindi. Bir qismining hajmi 800 sm³. To'liq pitsa hajmini toping (sm³).",
+  options:["100","640","6400","1000"],
+  correct:2,
+  solution:"Jami = 8 × 800 = 6400 sm³."
+},
+{
+  q:"Aziz kitobning 36 betini o'qidi. Shunda u kitobning 18% ini tashkil qilsa, kitob necha betlik?",
+  options:["20","200","400","100"],
+  correct:1,
+  solution:"x × 18/100 = 36 → x = 36×100/18 = 200 bet."
+},
+{
+  q:"3 m² yuzani bo'yash uchun 1 litr rang ketadi. Qirrasi 1 m bo'lgan kubning sirtini bo'yash uchun necha litr rang kerak?",
+  options:["3 litr","1 litr","2 litr","6 litr"],
+  correct:2,
+  solution:"Kub to'la sirti = 6a² = 6×1 = 6 m².\nRang: 6/3 = 2 litr."
+},
+{
+  q:"Tenglamani yeching: 2(2x−3) + 4 = 3(x+1)",
+  options:["−5","5","6","1"],
+  correct:1,
+  solution:"4x−6+4 = 3x+3.\n4x−2 = 3x+3.\nx = 5."
+},
+{
+  q:"Sardor uydan maktabga 4 xil yo'l bilan borishi mumkin. Borgan yo'l bilan qaytmaslik sharti bilan necha xil usulda borib qaytishi mumkin?",
+  options:["12","16","7","8"],
+  correct:0,
+  solution:"Borish: 4 ta usul.\nQaytish: 3 ta usul (borgan yo'ldan boshqasi).\nJami: 4×3 = 12 usul."
+},
+
+/* --- 23-iyul varianti --- */
+{
+  q:"To'g'ri to'rtburchakning perimetri 36 sm, eni 6 sm. Yuzini toping (sm²).",
+  options:["12 sm²","72 sm²","24 sm²","36 sm²"],
+  correct:1,
+  solution:"P = 2(a+b) = 36 → a+b = 18.\nb = 6 → a = 12 sm.\nYuza = 12×6 = 72 sm²."
+},
+{
+  q:"Arqon 2:3 nisbatdagi bo'laklarga ajratildi. Katta bo'lakning uzunligi 9 m bo'lsa, arqonning uzunligini toping.",
+  options:["6 m","3 m","12 m","15 m"],
+  correct:3,
+  solution:"Nisbat 2:3. Katta = 3 qism = 9 m → 1 qism = 3 m.\nJami = (2+3)×3 = 15 m."
+},
+{
+  q:"Do'konda shim va ko'ylak uchun mos ravishda 40% va 50% chegirma berilmoqda. Shimning narxi 250 000 so'm, ko'ylakniki 120 000 so'm. Chegirmadan so'ng jami to'lov?",
+  options:["160 000","210 000","240 000","192 000"],
+  correct:1,
+  solution:"Shim: 250 000×0.6 = 150 000 so'm.\nKo'ylak: 120 000×0.5 = 60 000 so'm.\nJami: 150 000+60 000 = 210 000 so'm."
+},
+{
+  q:"Savatda 4 ta olma va 3 ta nok bor. Savatdan 1 ta mevani necha xil usulda olish mumkin?",
+  options:["12","7","1","24"],
+  correct:1,
+  solution:"Jami mevalar = 4+3 = 7 ta. 1 tasini tanlash = 7 xil usul."
+},
+{
+  q:"Tenglamani yeching: (3x+2)/(2x−1) = 2",
+  options:["−4","1","−2","4"],
+  correct:3,
+  solution:"3x+2 = 2(2x−1) = 4x−2.\n3x+2 = 4x−2.\n2+2 = 4x−3x.\nx = 4."
+},
+
+/* --- 24-iyul varianti --- */
+{
+  q:"12 metrlik arqon teng 15 ta bo'lakka bo'lindi. Har bir bo'lak necha sm?",
+  options:["8 sm","80 sm","120 sm","100 sm"],
+  correct:1,
+  solution:"12 m = 1200 sm.\n1200 / 15 = 80 sm."
+},
+{
+  q:"Proporsiyaning noma'lum hadini toping: 1:5 = 20:x",
+  options:["8","4","12","100"],
+  correct:3,
+  solution:"1/5 = 20/x.\nx = 20×5 = 100.\nYoki: 1·x = 5·20 → x = 100."
+},
+{
+  q:"Quyidagilardan qaysi fazoviy jismning yoqlari soni eng ko'p? A) uchburchakli prizma B) beshburchakli prizma C) to'rtburchakli piramida D) kub",
+  options:["uchburchakli prizma","beshburchakli prizma","to'rtburchakli piramida","kub"],
+  correct:1,
+  solution:"Uchburchakli prizma: n+2=5 yoq.\nBeshburchakli prizma: n+2=7 yoq.\nTo'rtburchakli piramida: n+1=5 yoq.\nKub: 6 yoq.\nEng ko'p: beshburchakli prizma — 7 yoq."
+},
+{
+  q:"EKUB(48; 120) = ?",
+  options:["16","24","12","8"],
+  correct:1,
+  solution:"48 = 2⁴×3, 120 = 2³×3×5.\nEKUB = 2³×3 = 24."
+},
+{
+  q:"Soddalshtiring: 4(x+1) + 2(2−x)",
+  options:["2x","8","2x−8","2x+8"],
+  correct:3,
+  solution:"4x+4+4−2x = 2x+8."
+},
+{
+  q:"Kasrning qiymatini toping: 2⅟₁₅ + 1⅔",
+  options:["3(3/18)","3(7/15)","11/15","3(11/15)"],
+  correct:3,
+  solution:"2⅟₁₅ = 31/15. 1⅔ = 5/3 = 25/15.\n31/15 + 25/15 = 56/15 = 3(11/15)."
+},
+
+/* ===== 2024-yil 14-15 iyul (ochiq format savollar) ===== */
+{
+  q:"0,1,2,4 raqamlaridan takrorlanmaydigan eng katta va eng kichik to'rt xonali sonlar tuzildi. Ayirmasini toping.",
+  options:["3186","3177","3168","3087"],
+  correct:0,
+  solution:"Eng katta: 4210 (katta raqamlar avval).\nEng kichik (0 boshda bo'lmasin): 1024.\nAyirma: 4210 − 1024 = 3186."
+},
+{
+  q:"8 + b + a − (a + 4 − b) ifodani soddalashtiring.",
+  options:["4 + 2b","4 − 2b","12 + 2b","2b"],
+  correct:0,
+  solution:"8 + b + a − a − 4 + b\n= (8−4) + (b+b) + (a−a)\n= 4 + 2b."
+},
+{
+  q:"7/(x+1) + 2 = 6/(x+1) + 3 tenglamasini yeching.",
+  options:["x = 0","x = −2","x = 1","x = −1"],
+  correct:0,
+  solution:"7/(x+1) − 6/(x+1) = 3 − 2.\n1/(x+1) = 1 → x+1 = 1 → x = 0.\nTekshirish: 7/1+2 = 6/1+3 → 9=9 ✓"
+},
+{
+  q:"5 + (−3) − (−2)⁴ ni hisoblang.",
+  options:["−14","18","−18","14"],
+  correct:0,
+  solution:"(−2)⁴ = +16 (juft ko'rsatkich → musbat).\n5 + (−3) − 16 = 5 − 3 − 16 = −14."
+},
+{
+  q:"Kubning qirrasi 2 ga teng bo'lsa, uning hajmini toping.",
+  options:["4","6","8","12"],
+  correct:2,
+  solution:"V = a³ = 2³ = 8.\nKub hajmi = qirra³."
+},
+{
+  q:"Kubning qirrasi 2 ga teng bo'lsa, to'la sirt yuzini toping.",
+  options:["8","16","24","12"],
+  correct:2,
+  solution:"To'la sirt = 6a² = 6 × 4 = 24.\n6 ta teng yog'i bor, har biri = a² = 4."
+},
+{
+  q:"Kubning qirrasi 2 ga teng bo'lsa, yon sirt yuzini toping.",
+  options:["8","16","4","12"],
+  correct:1,
+  solution:"Yon sirt = 4a² = 4 × 4 = 16.\n4 ta yon yog'i (asos va qopqoq kiritilmaydi)."
+},
+{
+  q:"Bekzodning uyidan maktabgacha 2,5 km. Masofaning yarmini bosib o'tgandan keyin manzilgacha necha metr qolgan?",
+  options:["1250 m","750 m","2500 m","500 m"],
+  correct:0,
+  solution:"2.5 km = 2500 m.\nYarmi = 1250 m bosib o'tdi.\nQoldi = 2500 − 1250 = 1250 m."
+},
+{
+  q:"Kvadratning yuzi 16 sm² ga teng. Uning tomoni bilan teng tomonli muntazam oltiburchak perimetrini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 120' width='260' height='112' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><rect x='18' y='28' width='64' height='64' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='50' y='63' text-anchor='middle' font-size='12' fill='#0e7cc4' font-weight='bold'>S=16</text><text x='50' y='78' text-anchor='middle' font-size='11' fill='#0e7cc4'>sm²</text><text x='50' y='20' text-anchor='middle' font-size='11' fill='#5d7282'>Kvadrat</text><text x='50' y='106' text-anchor='middle' font-size='10' fill='#5d7282'>a=?</text><polygon points='168,28 208,28 228,60 208,92 168,92 148,60' fill='#d4f4e5' stroke='#239e69' stroke-width='2.5'/><text x='188' y='64' text-anchor='middle' font-size='12' fill='#239e69' font-weight='bold'>P=?</text><text x='188' y='20' text-anchor='middle' font-size='11' fill='#5d7282'>Oltiburchak</text><line x1='82' y1='60' x2='148' y2='60' stroke='#f4a23b' stroke-width='2' stroke-dasharray='5,3'/><text x='115' y='54' text-anchor='middle' font-size='10' fill='#f4a23b' font-weight='bold'>teng</text></svg>",
+  options:["16 sm","20 sm","24 sm","12 sm"],
+  correct:2,
+  solution:"Kvadrat yuzi: a² = 16 → a = 4 sm.\nOltiburchak tomoni = kvadrat tomoni = 4 sm.\nMuntazam oltiburchak perimetri = 6 × 4 = 24 sm."
+},
+{
+  q:"Teng yonli uchburchakning uchidagi burchagi 58° bo'lsa, asosidagi bitta burchagini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 165' width='205' height='152' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='110,18 22,148 198,148' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='110' y='14' text-anchor='middle' font-size='14' fill='#df544a' font-weight='bold'>58°</text><text x='14' y='162' text-anchor='middle' font-size='14' fill='#239e69' font-weight='bold'>?</text><text x='205' y='162' text-anchor='middle' font-size='14' fill='#239e69' font-weight='bold'>?</text><line x1='63' y1='82' x2='73' y2='92' stroke='#239e69' stroke-width='2.5'/><line x1='57' y1='88' x2='67' y2='98' stroke='#239e69' stroke-width='2.5'/><line x1='147' y1='82' x2='157' y2='92' stroke='#239e69' stroke-width='2.5'/><line x1='153' y1='88' x2='163' y2='98' stroke='#239e69' stroke-width='2.5'/><text x='110' y='115' text-anchor='middle' font-size='11' fill='#5d7282'>teng yonli △</text></svg>",
+  options:["58°","61°","122°","29°"],
+  correct:1,
+  solution:"Teng yonli uchburchakda ikkita asos burchagi teng.\n58° + 2α = 180°.\n2α = 122° → α = 61°."
+},
+{
+  q:"0, 2, 4 raqamlaridan foydalanib nechta turli uch xonali son hosil qilish mumkin?",
+  options:["4 ta","6 ta","8 ta","3 ta"],
+  correct:0,
+  solution:"0 boshda bo'lmasin:\nO'nlar = 2 → birlar, yuzlar: (0,4) dan 2 ta → 2 son.\nO'nlar = 4 → birlar, yuzlar: (0,2) dan 2 ta → 2 son.\nJami: 4 ta. (204, 240, 402, 420)"
+},
+{
+  q:"1 m³ hajmli idishni necha litr suv bilan to'ldirish mumkin?",
+  options:["100 litr","10 litr","1000 litr","10 000 litr"],
+  correct:2,
+  solution:"1 m = 10 dm → 1 m³ = 10³ dm³ = 1000 dm³.\n1 dm³ = 1 litr → 1 m³ = 1000 litr."
+},
+{
+  q:"600 ning 45% ini hisoblang.",
+  options:["250","270","280","300"],
+  correct:1,
+  solution:"600 × 45/100 = 600 × 0.45 = 270.\nYoki: 600×40%=240; 600×5%=30. Jami: 270."
+},
+{
+  q:"Qutiga 185 dona olma solingandan so'ng jami 400 ta bo'ldi. Dastlab qutida nechta olma bo'lgan?",
+  options:["585 ta","225 ta","215 ta","185 ta"],
+  correct:2,
+  solution:"x + 185 = 400 → x = 400 − 185 = 215 ta."
+},
+{
+  q:"a=4,25 va b=2,25 bo'lsa, a²−b² ning qiymatini hisoblang.",
+  options:["9","12","13","6.5"],
+  correct:2,
+  solution:"a²−b² = (a−b)(a+b).\na−b = 4.25−2.25 = 2.\na+b = 4.25+2.25 = 6.5.\nNatija = 2 × 6.5 = 13."
+},
+{
+  q:"Usta 9 ta detal yasadi. Bu miqdor oldin yasaydigan detalning 12,5% ini tashkil qiladi. Usta oldin 1 kunda nechta detal yasagan?",
+  options:["72 ta","108 ta","90 ta","36 ta"],
+  correct:0,
+  solution:"x × 12.5% = 9 → x = 9/0.125 = 72 ta."
+},
+{
+  q:"Parallelipiped asosining yuzi 32 sm², balandligi 8 sm. Hajmini toping.",
+  options:["256 sm³","40 sm³","128 sm³","64 sm³"],
+  correct:0,
+  solution:"V = S_asos × h = 32 × 8 = 256 sm³."
+},
+{
+  q:"Parallelepipedning hajmi 60 sm³, asosining yuzi 12 sm². Balandligini toping.",
+  options:["5 sm","6 sm","4 sm","8 sm"],
+  correct:0,
+  solution:"h = V / S_asos = 60 / 12 = 5 sm."
+},
+{
+  q:"Muntazam uchburchakning perimetri 12 sm va to'g'ri to'rtburchakning yuzi 24 sm² ga teng. Ular bitta umumiy teng tomonga ega bo'lsa, to'g'ri to'rtburchakning perimetrini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 290 140' width='272' height='130' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><rect x='14' y='32' width='112' height='90' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='70' y='75' text-anchor='middle' font-size='12' fill='#0e7cc4' font-weight='bold'>S=24 sm²</text><text x='70' y='93' text-anchor='middle' font-size='12' fill='#0e7cc4' font-weight='bold'>P=?</text><text x='14' y='29' font-size='11' fill='#0e7cc4'>⌐</text><text x='118' y='29' font-size='11' fill='#0e7cc4'>⌐</text><text x='14' y='128' font-size='11' fill='#0e7cc4'>⌐</text><text x='118' y='128' font-size='11' fill='#0e7cc4'>⌐</text><polygon points='126,32 175,32 150,77' fill='#d4f4e5' stroke='#239e69' stroke-width='2.5'/><text x='167' y='28' text-anchor='middle' font-size='11' fill='#239e69' font-weight='bold'>P=12sm</text><line x1='126' y1='32' x2='126' y2='122' stroke='#f4a23b' stroke-width='3'/><text x='200' y='58' text-anchor='start' font-size='11' fill='#f4a23b' font-weight='bold'>umumiy</text><text x='200' y='72' text-anchor='start' font-size='11' fill='#f4a23b' font-weight='bold'>tomon=a</text><line x1='126' y1='65' x2='196' y2='65' stroke='#f4a23b' stroke-width='1.5' stroke-dasharray='4,3'/></svg>",
+  options:["20 sm","24 sm","22 sm","18 sm"],
+  correct:0,
+  solution:"Muntazam uchburchak tomoni = 12/3 = 4 sm.\nBu to'g'ri to'rtburchakning bir tomoni = 4 sm.\n4 × b = 24 → b = 6 sm.\nPerimetr = 2(4+6) = 20 sm."
+},
+{
+  q:"Teng yonli uchburchakda uchidagi burchak 58°. Chizmadagi tashqi x° burchagini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 165' width='242' height='152' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='110,18 28,145 192,145' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><line x1='192' y1='145' x2='242' y2='145' stroke='#15293c' stroke-width='2.5'/><text x='110' y='14' text-anchor='middle' font-size='14' fill='#df544a' font-weight='bold'>58°</text><text x='206' y='140' font-size='15' fill='#239e69' font-weight='bold'>x°</text><text x='20' y='160' font-size='12' fill='#5d7282' font-weight='bold'>A</text><text x='190' y='160' font-size='12' fill='#5d7282' font-weight='bold'>B</text><text x='238' y='160' font-size='12' fill='#5d7282' font-weight='bold'>D</text><text x='107' y='36' font-size='12' fill='#5d7282' font-weight='bold'>C</text><line x1='62' y1='80' x2='72' y2='90' stroke='#239e69' stroke-width='2.5'/><line x1='56' y1='86' x2='66' y2='96' stroke='#239e69' stroke-width='2.5'/><line x1='150' y1='80' x2='160' y2='90' stroke='#239e69' stroke-width='2.5'/><line x1='156' y1='86' x2='166' y2='96' stroke='#239e69' stroke-width='2.5'/></svg>",
+  options:["61°","119°","122°","90°"],
+  correct:1,
+  solution:"Asos burchagi: (180°−58°)/2 = 122°/2 = 61°.\nTashqi burchak = 180° − 61° = 119°.\n(Tashqi burchak = qo'shni ichki burchakni to'ldiradi.)"
+},
+
+/* ===== 2025-YIL BMBA ORIGINAL SAVOLLARI (Rustambek) ===== */
+{
+  q:"Toshbaqa 1 minutda 2 metr yo'l bosadi. 150 metrni necha soatda bosib o'tadi?",
+  options:["1 soat","1,25 soat","1,5 soat","2 soat"],
+  correct:1,
+  solution:"150 metr uchun vaqt: 150 ÷ 2 = 75 minut.\n75 minut = 75/60 = 1,25 soat."
+},
+{
+  q:"Shilliqqurt 1 minutda 0,5 metr masofani bosib o'tsa, 20 metrni qancha vaqtda bosib o'tadi? (minut)",
+  options:["30","40","20","10"],
+  correct:1,
+  solution:"20 ÷ 0,5 = 40 minut."
+},
+{
+  q:"a sonining 36% i, 108 ning 24% iga teng. a sonini toping.",
+  options:["36","108","72","54"],
+  correct:2,
+  solution:"a × 0,36 = 108 × 0,24.\na × 0,36 = 25,92.\na = 25,92 / 0,36 = 72."
+},
+{
+  q:"Nechta ikki xonali son 50 ning bo'luvchisi bo'ladi?",
+  options:["2","3","4","5"],
+  correct:1,
+  solution:"50 ning bo'luvchilari: 1, 2, 5, 10, 25, 50.\nIkki xonali bo'luvchilar: 10, 25, 50 — 3 ta."
+},
+{
+  q:"Gul do'konida qizil atirguldan 3 xil guldasta va oq atirguldan 2 xil guldasta yasalgan. Bu guldastalardan 1 tasini olishning nechta usuli bor?",
+  options:["4","5","9","12"],
+  correct:1,
+  solution:"Yig'indi qoidasi: 3 + 2 = 5 xil usul.\n(1 ta guldasta tanlanadi — qizil yoki oq.)"
+},
+{
+  q:"Gul do'konida qizil atirguldan 4 xil va oq atirguldan 2 xil guldasta yasalgan. Har xil rangdan 1 tadan, jami 2 ta guldasta olishning nechta usuli bor?",
+  options:["8","60","6","12"],
+  correct:0,
+  solution:"Ko'paytirish qoidasi: 4 × 2 = 8 xil usul.\n(Qizil va oq guldasta birga olinadi.)"
+},
+{
+  q:"Nigina opa qulupnayli murabbo uchun 1 kg qulupnayga 1,25 kg shakar soladi. 9 kg qulupnay uchun necha kg qulupnay va necha kg shakar kerak?",
+  options:["3; 6","4; 5","7; 2","9; 11,25"],
+  correct:3,
+  solution:"Qulupnay: 9 kg.\nShakar: 9 × 1,25 = 11,25 kg.\nJavob: 9 kg qulupnay va 11,25 kg shakar."
+},
+{
+  q:"2 ta sonning yig'indisi 220. Ularning nisbati 10:1 bo'lsa, shu sonlarning musbat ayirmasini toping.",
+  options:["160","170","180","190"],
+  correct:2,
+  solution:"Qismlar: 10+1 = 11. 1 qism = 220/11 = 20.\nSonlar: 200 va 20.\nAyirma: 200 − 20 = 180."
+},
+{
+  q:"a, b natural sonlar uchun a + b/2 = 100 tenglik o'rinli bo'lsa, a + b ning eng katta qiymatini toping.",
+  options:["200","250","300","199"],
+  correct:3,
+  solution:"a + b/2 = 100 → 2a + b = 200.\na+b ni maksimal qilish uchun b katta, a kichik bo'lsin.\na=1 → b=198. a+b = 199.\nEng katta qiymat: 199."
+},
+{
+  q:"Aka ukasidan 10 yosh katta va yoshlari nisbati 3:1. Necha yildan so'ng yoshlari nisbati 2:1 bo'ladi?",
+  options:["4","5","10","8"],
+  correct:1,
+  solution:"Hozir: uka = x, aka = 3x. Aka−uka = 2x = 10 → x=5.\nUka=5, aka=15.\nn yildan keyin: (15+n)/(5+n) = 2/1.\n15+n = 10+2n → n = 5 yil."
+},
+{
+  q:"Mahsulot narxi 55000 so'm edi. 44000 so'mga tushirilsa, necha foiz chegirma bo'lgan?",
+  options:["11%","20%","25%","40%"],
+  correct:1,
+  solution:"Chegirma = 55000 − 44000 = 11000 so'm.\nFoiz = 11000/55000 × 100% = 20%."
+},
+{
+  q:"Ko'paytuvchilarga ajrating: 6ab²c − 18abc",
+  options:["6ab(c−3)","6abc(b−2)","6abc(b−3)","abc(b−18)"],
+  correct:2,
+  solution:"Umumiy ko'paytuvchi: 6abc.\n6ab²c − 18abc = 6abc(b − 3).\nTekshirish: 6abc·b = 6ab²c ✓; 6abc·3 = 18abc ✓"
+},
+{
+  q:"Sport zalda 8 ta O'zbekistonlik, 10 ta Qozog'istonlik sportchi bor. 1 ta o'zbek va 1 ta qozoq sportchini necha xil usulda tanlash mumkin?",
+  options:["40","80","36","72"],
+  correct:1,
+  solution:"Ko'paytirish qoidasi: 8 × 10 = 80 xil usul."
+},
+{
+  q:"Soddalashtiring: (2a²−6a³)·2a",
+  options:["4a³−12a⁴","4a²+12a⁴","4a⁴−12a³","12a⁴−4a³"],
+  correct:0,
+  solution:"(2a²−6a³)·2a = 2a²·2a − 6a³·2a = 4a³ − 12a⁴."
+},
+{
+  q:"Soddalashtiring: (2a²+6a):2a",
+  options:["a+2","3−a","a+3","a+4"],
+  correct:2,
+  solution:"(2a²+6a):2a = 2a²/2a + 6a/2a = a + 3."
+},
+{
+  q:"3 − √7 soniga qarama-qarshi sonni toping.",
+  options:["−√7+3","−3+√7","7−√3","−7+√3"],
+  correct:1,
+  solution:"Qarama-qarshi son: −(3−√7) = −3+√7.\nTekshirish: (3−√7) + (−3+√7) = 0 ✓"
+},
+{
+  q:"2(x−3)+7 = 2x tenglamani yeching.",
+  options:["2","yechimi yo'q (∅)","4","5"],
+  correct:1,
+  solution:"2x−6+7 = 2x → 2x+1 = 2x → 1 = 0.\nBu yolg'on tenglik. Yechim yo'q (∅)."
+},
+{
+  q:"Hajmi 8 m³ ga teng kubning sirtini bo'yash uchun 1 m² ga 250 ml bo'yoq ketadi. Kubning to'la sirtini bo'yash uchun necha litr kerak?",
+  options:["6000","600","60","6"],
+  correct:3,
+  solution:"V = a³ = 8 → a = 2 m.\nTo'la sirt = 6a² = 6×4 = 24 m².\nBo'yoq: 24 × 250 ml = 6000 ml = 6 litr."
+},
+{
+  q:"Agar a+b=320 va a/b=39 bo'lsa, a−b ning qiymatini toping.",
+  options:["299","302","304","307"],
+  correct:2,
+  solution:"a/b = 39 → a = 39b.\n39b + b = 320 → 40b = 320 → b = 8.\na = 312. a−b = 312 − 8 = 304."
+},
+{
+  q:"Soddalashtiring: (x+2)·(x²−2x+4) − 4",
+  options:["x³+4","x³−4","x³+8","x³−8"],
+  correct:0,
+  solution:"(x+2)(x²−2x+4) = x³ + 8 (yig'indi kubi formulasi: a³+b³).\nx³ + 8 − 4 = x³ + 4."
+},
+{
+  q:"Soddalashtiring: a(b−c) − b(c−a) − c(a−b)",
+  options:["2ab+2ac","2b−2ac","4ab−2ac","2ab−2ac"],
+  correct:3,
+  solution:"a(b−c) = ab−ac.\n−b(c−a) = −bc+ab.\n−c(a−b) = −ac+bc.\nYig'indi: ab−ac−bc+ab−ac+bc = 2ab−2ac."
+},
+{
+  q:"25 gacha bo'lgan tub sonlar yig'indisini toping.",
+  options:["114","100","144","99"],
+  correct:1,
+  solution:"Tub sonlar: 2,3,5,7,11,13,17,19,23.\nYig'indi: 2+3+5+7+11+13+17+19+23 = 100."
+},
+{
+  q:"Aylanada A, B, C, D nuqtalar bor. Bu nuqtalardan foydalanib nechta vatar o'tkazish mumkin?",
+  options:["7 ta","4 ta","6 ta","12 ta"],
+  correct:2,
+  solution:"Vatar = 2 nuqtani birlashtirish.\nC(4,2) = 4!/(2!·2!) = 6 ta vatar.\n(AB, AC, AD, BC, BD, CD)"
+},
+{
+  q:"Agar x=8,25 va y=−2,25 bo'lsa, x²−y² ning qiymatini hisoblang.",
+  options:["64","63","60","54"],
+  correct:1,
+  solution:"x²−y² = (x−y)(x+y).\nx−y = 8,25−(−2,25) = 10,5.\nx+y = 8,25+(−2,25) = 6.\nNatija = 10,5 × 6 = 63."
+},
+{
+  q:"Agar xy=2 va x+y=3 bo'lsa, x²y + y²x ning qiymatini hisoblang.",
+  options:["1","2","4","6"],
+  correct:3,
+  solution:"x²y + y²x = xy(x+y) = 2 × 3 = 6."
+},
+{
+  q:"Koordinatasi A(−5; 0) va B(5; 0) bo'lgan nuqtalar orasidagi masofani toping.",
+  options:["11","9","12","10"],
+  correct:3,
+  solution:"Masofa = |5 − (−5)| = |10| = 10 birlik."
+},
+{
+  q:"Fabrikada ko'ylak tikish uchun 12% mato ketadi. Ko'ylak uchun 300 metr mato olingan bo'lsa, fabrikada jami qancha metr mato bo'lgan?",
+  options:["1600","2000","1800","2500"],
+  correct:3,
+  solution:"x × 12/100 = 300 → x = 300 × 100/12 = 2500 metr."
+},
+{
+  q:"Hisoblang: 6,42 + 9/8 − 1,045",
+  options:["6,4","6,5","6","1,25"],
+  correct:1,
+  solution:"9/8 = 1,125.\n6,42 + 1,125 − 1,045 = 7,545 − 1,045 = 6,5."
+},
+{
+  q:"Hisoblang: (−2,4):(−0,8) + 7",
+  options:["10","40","4","16"],
+  correct:0,
+  solution:"(−2,4)/(−0,8) = 3.\n3 + 7 = 10."
+},
+{
+  q:"Tenglamani yeching: 2019 − 2x = 2021",
+  options:["1","4","11","−1"],
+  correct:3,
+  solution:"−2x = 2021 − 2019 = 2.\nx = −1."
+},
+{
+  q:"A, B, C, D nuqtalar bir to'g'ri chiziqda. AC=25 sm, BD=27 sm, AD=45 sm. BC kesma uzunligini toping.",
+  options:["11","8","10","7"],
+  correct:3,
+  solution:"AC + BD = AB+BC + BC+CD = AB+2BC+CD.\nAD = AB+BC+CD = 45.\nAC+BD = 25+27 = 52 = AD + BC.\n52 = 45 + BC → BC = 7 sm."
+},
+{
+  q:"Kubning to'la sirti 468 m² ga teng. Kubning bitta yog'i yuzini toping.",
+  options:["72 m²","74 m²","76 m²","78 m²"],
+  correct:3,
+  solution:"To'la sirt = 6a² = 468 → a² = 78.\nBitta yoq yuzi = a² = 78 m²."
+},
+{
+  q:"Uchburchakning bitta tomoni 30, qolgan ikkita tomoni 8:7 nisbatda. Perimetri 60 bo'lsa, kichik tomonini toping.",
+  options:["14","15","16","17"],
+  correct:0,
+  solution:"Qolgan ikki tomon yig'indisi: 60 − 30 = 30.\nNisbat 8:7 → 15 qism = 30 → 1 qism = 2.\nKichik tomon = 7×2 = 14."
+},
+{
+  q:"Agar a=5, b=3 bo'lsa, (a+b)/(a−b) ning qiymatini toping.",
+  options:["2","4","6","8"],
+  correct:1,
+  solution:"(5+3)/(5−3) = 8/2 = 4."
+},
+{
+  q:"Doira radiusi 6 ga teng. Doiraning yuzini toping.",
+  options:["18π","36π","72π","12π"],
+  correct:1,
+  solution:"S = πr² = π × 6² = 36π."
+},
+{
+  q:"Hisoblang: (5/6):(15/24) + (1/2):(1/4)",
+  options:["8/3","10/3","7/2","11/3"],
+  correct:1,
+  solution:"(5/6):(15/24) = (5/6)×(24/15) = 120/90 = 4/3.\n(1/2):(1/4) = (1/2)×4 = 2.\n4/3 + 2 = 4/3 + 6/3 = 10/3."
+},
+{
+  q:"Kubning asosining yuzi 64 ga teng. Kubning to'la sirti yuzini toping.",
+  options:["100","400","384","272"],
+  correct:2,
+  solution:"Asos yuzi = a² = 64.\nTo'la sirt = 6a² = 6×64 = 384."
+},
+{
+  q:"10 metr/sekund necha km/sekund ga teng?",
+  options:["0,1","0,01","0,001","0,0001"],
+  correct:1,
+  solution:"1 km = 1000 m.\n10 m = 10/1000 = 0,01 km.\n10 m/s = 0,01 km/s."
+},
+{
+  q:"Poyezdga 18 kishi chiqdi, so'ng 6 kishi tushib qoldi va so'ng poyezdda 31 ta odam qoldi. Dastlab poyezdda nechta odam bo'lgan?",
+  options:["38","19","17","15"],
+  correct:1,
+  solution:"x + 18 − 6 = 31.\nx + 12 = 31 → x = 19 kishi."
+},
+{
+  q:"Sinfda 24 ta o'quvchi bor. Sinf o'quvchilari orasidan sinf sardorini tanlashning nechta usuli bor?",
+  options:["12","40","24","72"],
+  correct:2,
+  solution:"24 ta o'quvchidan 1 tasini tanlash = 24 xil usul."
+},
+{
+  q:"Tenglama nechta ildizga ega? 10 − 2x = 2(4−x) + 2",
+  options:["yechimga ega emas","cheksiz ko'p","1 ta","2 ta"],
+  correct:1,
+  solution:"10 − 2x = 8 − 2x + 2 = 10 − 2x.\n10−2x = 10−2x — har doim to'g'ri.\nCheksiz ko'p yechim."
+},
+{
+  q:"Agar ikki sonning yig'indisi 600, biri ikkinchisidan 2 marta katta bo'lsa, kattasini toping.",
+  options:["200","300","400","450"],
+  correct:2,
+  solution:"x + 2x = 600 → 3x = 600 → x = 200.\nKattasi: 2x = 400."
+},
+{
+  q:"Raqamlari ko'paytmasi 12 ga teng bo'lgan nechta ikki xonali son bor?",
+  options:["3 ta","4 ta","5 ta","6 ta"],
+  correct:1,
+  solution:"Raqamlar ko'paytmasi 12 bo'lgan juftliklar: 2×6 va 3×4.\nIkki xonali sonlar: 26, 62, 34, 43.\nJami: 4 ta.\n(1×12 bo'lmaydi — 12 bir xonali emas.)"
+},
+{
+  q:"1 dan 97 gacha bo'lgan natural sonlar ichida 6 raqami necha marta ishtirok etadi?",
+  options:["20","19","18","17"],
+  correct:0,
+  solution:"Birlar xonasida 6: 6,16,26,36,46,56,66,76,86,96 → 10 ta.\nO'nlar xonasida 6: 60,61,...,69 → 10 ta.\nJami: 10 + 10 = 20 marta."
+},
+{
+  q:"Aylana radiusi 3 sm bo'lsa, uning uzunligini (sm) toping.",
+  options:["9π","5π","6π","3π"],
+  correct:2,
+  solution:"C = 2πr = 2π×3 = 6π."
+},
+{
+  q:"Fermada 250 kg meva bor. Birinchi do'konga ikkinchisiga qaraganda 4 marta ko'p yuborildi. Birinchi do'konga qancha meva yuborilgan?",
+  options:["50","150","200","240"],
+  correct:2,
+  solution:"Ikkinchi = x, birinchi = 4x.\nx + 4x = 250 → 5x = 250 → x = 50.\nBirinchi = 4×50 = 200 kg."
+},
+{
+  q:"225 dan qanday eng katta natural sonni ayirsak 144 dan katta bo'ladi?",
+  options:["80","81","79","78"],
+  correct:0,
+  solution:"225 − x > 144 → x < 81.\nEng katta natural son: x = 80.\nTekshirish: 225 − 80 = 145 > 144 ✓"
+},
+{
+  q:"10 nafar do'st o'zaro qo'l berib ko'rishishdi. Qo'l berishlar soni nechta?",
+  options:["20","90","45","100"],
+  correct:2,
+  solution:"Har juft 1 marta: C(10,2) = (10×9)/2 = 45 ta."
+},
+{
+  q:"Firma ishlab chiqargan 1200 dona mahsulotning 92% i a'lo navli. A'lo navli mahsulotlar sonini toping.",
+  options:["1114","1104","1000","1004"],
+  correct:1,
+  solution:"1200 × 92/100 = 1200 × 0,92 = 1104 dona."
+},
+{
+  q:"3 ta turli xatni 3 ta turli konvertga necha xil usulda joylash mumkin?",
+  options:["5 xil","1 xil","9 xil","6 xil"],
+  correct:3,
+  solution:"P₃ = 3! = 3×2×1 = 6 xil usul."
+},
+{
+  q:"Tenglamani yeching: 10·(x−10) = 6x",
+  options:["20","15","35","25"],
+  correct:3,
+  solution:"10x − 100 = 6x.\n4x = 100 → x = 25."
+},
+{
+  q:"18 ning butun bo'luvchilari soni nechta?",
+  options:["6 ta","9 ta","12 ta","24 ta"],
+  correct:2,
+  solution:"Musbat bo'luvchilar: 1,2,3,6,9,18 — 6 ta.\nBUTUN bo'luvchilar manfiylarni ham qo'shadi: ±1,±2,±3,±6,±9,±18 — 12 ta."
+},
+{
+  q:"Bug'doy tegirmonda yanchilganda un va kepak ajraladi. 19% kepak chiqsa, 24,3 t un olish uchun necha tonna bug'doy kerak?",
+  options:["32","30","45","25"],
+  correct:1,
+  solution:"Un ulushi: 100% − 19% = 81%.\nx × 0,81 = 24,3 → x = 24,3/0,81 = 30 tonna."
+},
+{
+  q:"Agar a=8,5 va b=2,5 bo'lsa, a³−b³−3ab(a−b) ning qiymatini toping.",
+  options:["125","343","216","100"],
+  correct:2,
+  solution:"a³−b³−3ab(a−b) = (a−b)³ (kub ayirma formulasi).\n(8,5−2,5)³ = 6³ = 216."
+},
+{
+  q:"4 soatning 1/5 qismiga mos keluvchi javobni toping.",
+  options:["80 minut","40 minut","0,8 soat","0,4 soat"],
+  correct:2,
+  solution:"4 soatning 1/5 = 4/5 = 0,8 soat.\n(0,8 soat = 48 minut.)"
+},
+{
+  q:"2,4 soatning 1/6 qismi necha daqiqa bo'ladi?",
+  options:["240","12","24","25"],
+  correct:2,
+  solution:"2,4 soat = 144 minut.\n144 × 1/6 = 24 daqiqa."
+},
+{
+  q:"7,2 tonna yukning nimchorak (chorakning yarmi, ya'ni 1/8) qismi sifatsiz deb topildi. Qancha yuk sifatsiz?",
+  options:["9 tonna","0,9 kg","90 kg","900 kg"],
+  correct:3,
+  solution:"7,2 tonna = 7200 kg.\nNimchorak = chorakning yarmi = 1/8.\n7200 × 1/8 = 900 kg."
+},
+{
+  q:"3 ta to'g'ri chiziq ko'pi bilan nechta nuqtada kesishadi?",
+  options:["1 ta","2 ta","3 ta","4 ta"],
+  correct:2,
+  solution:"Har juft chiziq 1 nuqtada kesishadi.\nC(3,2) = 3 ta kesishish nuqtasi."
+},
+{
+  q:"3200 kg ni tonnada ifodalang.",
+  options:["3,3 t","3,5 t","3,6 t","3,2 t"],
+  correct:3,
+  solution:"1 tonna = 1000 kg.\n3200 kg = 3200/1000 = 3,2 tonna."
+},
+{
+  q:"Barcha raqamlari juft bo'lgan ikki xonali sonlar nechta?",
+  options:["20","25","30","28"],
+  correct:0,
+  solution:"O'nlar (juft, 0 emas): 2,4,6,8 — 4 ta.\nBirlar (juft): 0,2,4,6,8 — 5 ta.\nJami: 4 × 5 = 20 ta."
+},
+{
+  q:"Xaritaning masshtabi 1:2000. Xaritada ikki nuqta orasidagi masofa 3 sm bo'lsa, haqiqiy masofa qancha?",
+  options:["80 metr","30 metr","60 metr","62 metr"],
+  correct:2,
+  solution:"Haqiqiy = 3 × 2000 = 6000 sm = 60 metr."
+},
+{
+  q:"Sanjar bilan otasining yoshlari yig'indisi 45. Sanjar bilan onasining yig'indisi 44. Ota va onasining yig'indisi 67 bo'lsa, Sanjarning yoshi nechada?",
+  options:["12","11","13","14"],
+  correct:1,
+  solution:"S+O₁=45, S+O₂=44, O₁+O₂=67.\nQo'shamiz: 2S+O₁+O₂ = 89.\n2S + 67 = 89 → 2S = 22 → S = 11."
+},
+{
+  q:"Hisoblang: |−10| + |−20| − |−10|·3",
+  options:["0","60","30","45"],
+  correct:0,
+  solution:"|−10|=10, |−20|=20, |−10|=10.\n10 + 20 − 10×3 = 30 − 30 = 0."
+},
+{
+  q:"Soat 7:45 bo'lgan vaqtdan necha daqiqa o'tgach soat 9:15 bo'ladi?",
+  options:["80","89","90","85"],
+  correct:2,
+  solution:"7:45 dan 9:15 gacha: 1 soat 30 daqiqa = 90 daqiqa."
+},
+{
+  q:"O'rdak g'ozdan 3 kg yengil, tovuqdan esa 1 kg og'ir. G'oz tovuqdan qanchaga og'ir?",
+  options:["2","3","4","5"],
+  correct:2,
+  solution:"O'rdak = tovuq + 1.\nG'oz = o'rdak + 3 = tovuq + 1 + 3 = tovuq + 4.\nG'oz tovuqdan 4 kg og'ir."
+},
+{
+  q:"Rombning tomoni 8 ga teng. Rombning perimetrini toping.",
+  options:["24","32","36","40"],
+  correct:1,
+  solution:"Romb 4 ta teng tomonli.\nPerimetr = 4 × 8 = 32."
+},
+{
+  q:"Sutdan 12% qaymoq olinadi. 15 kg sutdan qancha qaymoq olinadi?",
+  options:["1,8 gr","1,8 kg","18 kg","180 kg"],
+  correct:1,
+  solution:"15 × 12/100 = 15 × 0,12 = 1,8 kg."
+},
+{
+  q:"Tomonlari 7, 8 va 9 ga teng bo'lgan uchburchak yuzini toping.",
+  options:["24√5","12√5","6√5","48√5"],
+  correct:1,
+  solution:"Geron formulasi: p = (7+8+9)/2 = 12.\nS = √(p(p−a)(p−b)(p−c)) = √(12·5·4·3) = √720 = 12√5."
+},
+{
+  q:"Hisoblang: −((−120−80) − (120+(−20)))",
+  options:["500","300","250","−300"],
+  correct:1,
+  solution:"(−120−80) = −200.\n(120+(−20)) = 100.\n−200 − 100 = −300.\n−(−300) = 300."
+},
+{
+  q:"48 sonining natural bo'luvchilari nechta?",
+  options:["10","8","12","16"],
+  correct:0,
+  solution:"48 = 2⁴×3.\nBo'luvchilar soni = (4+1)(1+1) = 5×2 = 10 ta."
+},
+{
+  q:"Devorning 15% bo'yalgan bo'lsa, uning qancha qismi bo'yalmagan?",
+  options:["17/20","0,8","0,9","0,75"],
+  correct:0,
+  solution:"Bo'yalmagan = 100% − 15% = 85% = 85/100 = 17/20."
+},
+{
+  q:"Bug'doyni tegirmonda yanchilganda 81% un bo'lsa, 24,3 t un olish uchun necha tonna bug'doy kerak?",
+  options:["32","30","40","28"],
+  correct:1,
+  solution:"x × 0,81 = 24,3 → x = 24,3/0,81 = 30 tonna."
+},
+{
+  q:"40700 m² ni gektar va arda ifodalang.",
+  options:["4 ga 7 ar","40 ga 7 ar","407 ar","4 ga 700 ar"],
+  correct:0,
+  solution:"1 ga = 10000 m², 1 ar = 100 m².\n40700 m² = 40000 + 700 = 4 ga + 7 ar."
+},
+{
+  q:"600 gektar yerning 150 gektari necha foizini tashkil etadi?",
+  options:["25%","50%","15%","30%"],
+  correct:0,
+  solution:"150/600 × 100% = 25%."
 }
+,
+{
+  q:"Rasmda muntazam uchburchak va kvadrat berilgan. Kvadratning yuzi 36 ga teng bo'lsa, uchburchakning perimetrini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 200' width='150' height='185' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='80,15 125,75 35,75' fill='#d4f4e5' stroke='#239e69' stroke-width='2.5'/><rect x='35' y='75' width='90' height='90' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='80' y='125' text-anchor='middle' font-size='13' fill='#0e7cc4' font-weight='bold'>S=36</text><text x='80' y='60' text-anchor='middle' font-size='11' fill='#239e69' font-weight='bold'>P=?</text></svg>",
+  options:["18","16","24","12"],
+  correct:0,
+  solution:"Kvadrat yuzi = a² = 36 → a = 6.\nMuntazam uchburchak tomoni = kvadrat tomoni = 6.\nPerimetr = 3 × 6 = 18."
+},
+{
+  q:"Rasmda muntazam uchburchak va kvadrat berilgan. Kvadratning yuzi 4 ga teng bo'lsa, uchburchakning perimetrini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 200' width='150' height='185' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='80,15 125,75 35,75' fill='#d4f4e5' stroke='#239e69' stroke-width='2.5'/><rect x='35' y='75' width='90' height='90' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='80' y='125' text-anchor='middle' font-size='13' fill='#0e7cc4' font-weight='bold'>S=4</text><text x='80' y='60' text-anchor='middle' font-size='11' fill='#239e69' font-weight='bold'>P=?</text></svg>",
+  options:["6","8","10","12"],
+  correct:0,
+  solution:"Kvadrat yuzi = a² = 4 → a = 2.\nUchburchak tomoni = 2.\nPerimetr = 3 × 2 = 6."
+},
+{
+  q:"Rasmdagi ma'lumotlar asosida x burchakni toping. (Teng yonli uchburchak, asos burchagi 50°)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 150' width='205' height='140' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='110,18 30,130 190,130' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><line x1='110' y1='18' x2='110' y2='130' stroke='#239e69' stroke-width='1.5' stroke-dasharray='4'/><text x='52' y='124' font-size='12' fill='#df544a' font-weight='bold'>50°</text><text x='150' y='124' font-size='13' fill='#239e69' font-weight='bold'>x</text></svg>",
+  options:["60°","80°","40°","50°"],
+  correct:3,
+  solution:"Teng yonli uchburchakda asos burchaklari teng.\nBir asos burchagi 50° bo'lsa, ikkinchisi (x) ham 50°."
+},
+{
+  q:"ABC uchburchakda B uchidagi burchak 64°, A burchak α, C burchak β. Agar 2α = 64° bo'lsa, β burchakni toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 170' width='220' height='155' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='120,20 40,145 200,145' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='120' y='16' text-anchor='middle' font-size='12' fill='#5d7282' font-weight='bold'>B</text><text x='120' y='38' text-anchor='middle' font-size='12' fill='#df544a' font-weight='bold'>64°</text><text x='35' y='160' font-size='12' fill='#5d7282' font-weight='bold'>A</text><text x='52' y='140' font-size='12' fill='#239e69'>α</text><text x='200' y='160' font-size='12' fill='#5d7282' font-weight='bold'>C</text><text x='180' y='140' font-size='12' fill='#239e69'>β</text></svg>",
+  options:["84°","54°","45°","92°"],
+  correct:0,
+  solution:"2α = 64° → α = 32°.\nUchburchak burchaklari yig'indisi: 64° + α + β = 180°.\n64° + 32° + β = 180°.\nβ = 180° − 96° = 84°."
+},
+{
+  q:"Berilgan ma'lumotlardan foydalanib, ∠AOB + ∠BOD ni hisoblang. (AD va CB to'g'ri chiziqlar O nuqtada kesishadi)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 160' width='205' height='150' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><line x1='40' y1='40' x2='180' y2='120' stroke='#0e7cc4' stroke-width='2'/><line x1='180' y1='40' x2='40' y2='120' stroke='#239e69' stroke-width='2'/><circle cx='110' cy='80' r='3' fill='#15293c'/><text x='35' y='38' font-size='12' fill='#5d7282' font-weight='bold'>A</text><text x='183' y='38' font-size='12' fill='#5d7282' font-weight='bold'>C</text><text x='35' y='132' font-size='12' fill='#5d7282' font-weight='bold'>B</text><text x='183' y='132' font-size='12' fill='#5d7282' font-weight='bold'>D</text><text x='115' y='78' font-size='11' fill='#15293c'>O</text><text x='70' y='72' font-size='11' fill='#df544a' font-weight='bold'>30°</text></svg>AOB=30° berilgan.",
+  options:["70°","140°","210°","180°"],
+  correct:3,
+  solution:"∠AOB va ∠BOD qo'shni burchaklar (AD to'g'ri chiziq).\nQo'shni burchaklar yig'indisi = 180°.\n∠AOB + ∠BOD = 180°."
+},
+{
+  q:"ABCD kvadrat. α burchakning qiymatini toping. (BD diagonal, B uchida ikkita teng α burchak)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' width='150' height='150' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><rect x='35' y='25' width='90' height='90' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><line x1='35' y1='25' x2='125' y2='115' stroke='#239e69' stroke-width='2'/><text x='30' y='22' font-size='11' fill='#5d7282' font-weight='bold'>B</text><text x='128' y='22' font-size='11' fill='#5d7282' font-weight='bold'>C</text><text x='30' y='128' font-size='11' fill='#5d7282' font-weight='bold'>A</text><text x='128' y='128' font-size='11' fill='#5d7282' font-weight='bold'>D</text><text x='48' y='42' font-size='11' fill='#df544a' font-weight='bold'>α</text></svg>",
+  options:["40°","90°","180°","45°"],
+  correct:3,
+  solution:"Kvadrat diagonali burchakni teng ikkiga bo'ladi.\nKvadrat burchagi 90°.\nDiagonal: α = 90°/2 = 45°."
+},
+{
+  q:"Rasmdagi to'g'ri burchakli uchburchakda x ni toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 200' width='140' height='185' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='55,25 115,150 55,150' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><rect x='55' y='135' width='15' height='15' fill='none' stroke='#5d7282' stroke-width='1.2'/><text x='62' y='48' font-size='14' fill='#239e69' font-weight='bold'>x</text><text x='80' y='147' font-size='13' fill='#df544a' font-weight='bold'>39°</text></svg>",
+  options:["39°","51°","61°","49°"],
+  correct:1,
+  solution:"To'g'ri burchakli uchburchakda burchaklar yig'indisi 180°.\n90° (to'g'ri burchak) + 39° + x = 180°.\nx = 180° − 90° − 39° = 51°."
+},
+{
+  q:"Berilgan shaklning perimetrini toping. (Pog'onali shakl: 6, 5, 8, 3 o'lchamlar bilan)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 140' width='190' height='130' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='20,30 110,30 110,75 180,75 180,115 20,115' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><text x='62' y='25' font-size='11' fill='#15293c'>6</text><text x='115' y='55' font-size='11' fill='#15293c'>5</text><text x='142' y='70' font-size='11' fill='#15293c'>8</text><text x='185' y='98' font-size='11' fill='#15293c'>3</text></svg>",
+  options:["50","60","44","35"],
+  correct:2,
+  solution:"Yuqori gorizontal: 6, vertikal: 5, gorizontal: 8, vertikal: 3.\nPastki gorizontal = 6+8 = 14, chap vertikal = 5+3 = 8.\nPerimetr = 6+5+8+3+14+8 = 44."
+},
+{
+  q:"Berilgan shaklda bo'yalgan soha yuzi 30 sm². x (sm) ni toping. (To'g'ri burchakli uchburchak, balandlik 6 sm, asos x)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 130' width='185' height='120' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='40,25 40,100 160,100' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><rect x='40' y='88' width='12' height='12' fill='none' stroke='#5d7282' stroke-width='1'/><text x='25' y='65' font-size='12' fill='#239e69' font-weight='bold'>6</text><text x='98' y='115' font-size='13' fill='#df544a' font-weight='bold'>x</text></svg>",
+  options:["10","5","15","20"],
+  correct:0,
+  solution:"To'g'ri burchakli uchburchak yuzi: S = (asos × balandlik)/2.\n30 = (x × 6)/2 = 3x.\nx = 10 sm."
+},
+{
+  q:"Rasmda berilgan to'g'ri to'rtburchakning necha foizi bo'yalgan? (Diagonallar bilan 4 ga bo'lingan, qarama-qarshi 2 uchburchak bo'yalgan)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120' width='190' height='110' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><rect x='30' y='20' width='140' height='80' fill='#fff' stroke='#0e7cc4' stroke-width='2'/><polygon points='30,20 170,20 100,60' fill='#bcd3e2'/><polygon points='30,100 170,100 100,60' fill='#bcd3e2'/><line x1='30' y1='20' x2='170' y2='100' stroke='#0e7cc4' stroke-width='1'/><line x1='170' y1='20' x2='30' y2='100' stroke='#0e7cc4' stroke-width='1'/></svg>",
+  options:["65%","75%","50%","25%"],
+  correct:2,
+  solution:"Diagonallar to'rtburchakni 4 teng uchburchakka bo'ladi.\nYuqori va pastki uchburchak bo'yalgan = 2/4 = 50%."
+},
+{
+  q:"Berilgan to'g'ri burchakli uchburchakda x tashqi burchakni toping. (Bir uchida to'g'ri burchak, qarama-qarshi uchda ichki burchak 20°)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 150' width='225' height='138' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='95,25 50,120 190,120' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><rect x='88' y='30' width='13' height='13' fill='none' stroke='#5d7282' stroke-width='1.2'/><line x1='190' y1='120' x2='235' y2='120' stroke='#15293c' stroke-width='2'/><text x='60' y='114' font-size='12' fill='#239e69' font-weight='bold'>20°</text><text x='198' y='113' font-size='13' fill='#df544a' font-weight='bold'>x</text></svg>",
+  options:["100°","110°","80°","120°"],
+  correct:1,
+  solution:"To'g'ri burchakli uchburchakda: 90° + 20° + C = 180° → C = 70°.\nx — C burchakning tashqi burchagi.\nx = 180° − 70° = 110°."
+},
+{
+  q:"Rasmdagi ma'lumotlardan foydalanib ABC uchburchakning yuzini toping. (Balandlik BD=4m, AD=5m, DC=2m)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 160' width='205' height='150' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='130,30 40,130 180,130' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><line x1='130' y1='30' x2='130' y2='130' stroke='#239e69' stroke-width='1.5' stroke-dasharray='4'/><text x='130' y='24' text-anchor='middle' font-size='11' fill='#5d7282' font-weight='bold'>B</text><text x='35' y='143' font-size='11' fill='#5d7282' font-weight='bold'>A</text><text x='128' y='145' font-size='11' fill='#5d7282' font-weight='bold'>D</text><text x='183' y='143' font-size='11' fill='#5d7282' font-weight='bold'>C</text><text x='138' y='85' font-size='11' fill='#239e69'>4m</text><text x='80' y='128' font-size='11' fill='#15293c'>5m</text><text x='152' y='128' font-size='11' fill='#15293c'>2m</text></svg>",
+  options:["14 m²","15 m²","16 m²","28 m²"],
+  correct:0,
+  solution:"Asos AC = AD + DC = 5 + 2 = 7 m.\nBalandlik = 4 m.\nS = (7 × 4)/2 = 14 m²."
+},
+{
+  q:"Berilgan ma'lumotlardan foydalanib x ni toping. (Uchburchak C uchida 70°, A da tashqi burchak 120°, D da tashqi x)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 160' width='220' height='150' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><polygon points='120,25 75,120 165,120' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2.5'/><line x1='40' y1='120' x2='210' y2='120' stroke='#15293c' stroke-width='2'/><text x='120' y='20' text-anchor='middle' font-size='11' fill='#5d7282' font-weight='bold'>C</text><text x='120' y='42' text-anchor='middle' font-size='11' fill='#df544a' font-weight='bold'>70°</text><text x='52' y='114' font-size='11' fill='#239e69' font-weight='bold'>120°</text><text x='172' y='114' font-size='12' fill='#df544a' font-weight='bold'>x</text></svg>",
+  options:["130°","140°","120°","160°"],
+  correct:0,
+  solution:"A dagi ichki burchak = 180°−120° = 60°.\nUchburchak: 70° + 60° + C_ichki = 180° → C_ichki(D da) = 50°.\nx (tashqi) = 180° − 50° = 130°."
+},
+{
+  q:"Parallelepipedning bir uchidan chiqqan qirralari 10 sm, 10 sm, 6 sm. Undan qirrasi 6 sm lik kub kesib olindi. Qolgan qismning hajmini toping.<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 160' width='185' height='150' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><path d='M40,70 L100,70 L100,40 L140,40 L140,130 L40,130 Z' fill='#dbeeff' stroke='#0e7cc4' stroke-width='2'/><path d='M40,70 L60,55 L120,55 L100,70' fill='#c5e3f5' stroke='#0e7cc4' stroke-width='1.5'/><path d='M140,40 L160,25 L160,115 L140,130' fill='#a9d3ee' stroke='#0e7cc4' stroke-width='1.5'/><text x='100' y='95' text-anchor='middle' font-size='11' fill='#0e7cc4' font-weight='bold'>?</text><text x='145' y='85' font-size='10' fill='#15293c'>10</text><text x='105' y='62' font-size='10' fill='#15293c'>6</text></svg>",
+  options:["216","384","125","512"],
+  correct:1,
+  solution:"Butun parallelepiped: 10×10×6 = 600.\nKesilgan kub: 6×6×6 = 216.\nQolgan: 600 − 216 = 384 sm³."
+},
+{
+  q:"Agar a||b bo'lsa, x ni toping. (Parallel chiziqlar, burchaklar 140° va 20°)<br><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 180' width='200' height='165' style='display:block;margin:6px auto 2px;background:#f0f7fa;border-radius:8px;border:1px solid #dde7ed'><line x1='20' y1='55' x2='200' y2='55' stroke='#0e7cc4' stroke-width='2'/><line x1='20' y1='110' x2='200' y2='110' stroke='#0e7cc4' stroke-width='2'/><line x1='60' y1='25' x2='150' y2='160' stroke='#239e69' stroke-width='1.8'/><line x1='160' y1='90' x2='150' y2='160' stroke='#df544a' stroke-width='1.8'/><text x='15' y='52' font-size='11' fill='#5d7282' font-weight='bold'>a</text><text x='15' y='107' font-size='11' fill='#5d7282' font-weight='bold'>b</text><text x='75' y='48' font-size='11' fill='#239e69' font-weight='bold'>140°</text><text x='150' y='103' font-size='10' fill='#df544a'>20°</text><text x='162' y='120' font-size='12' fill='#15293c' font-weight='bold'>x</text></svg>",
+  options:["100°","110°","120°","130°"],
+  correct:2,
+  solution:"Parallel chiziqlar va kesuvchilar xossasidan:\nx = 140° − 20° = 120°.\n(Ichki burchaklar va alternativ burchaklar qoidasi.)"
+},
+{
+  q:"Quyidagi jadvalda mahsulotlar narxi: Pomidor 9000 so'm × 3 kg, Baklajon 13000 × 4 kg, Bodring 8000 × 5 kg. Jami narxni toping.",
+  options:["120000","119000","103000","140000"],
+  correct:1,
+  solution:"Pomidor: 9000×3 = 27000.\nBaklajon: 13000×4 = 52000.\nBodring: 8000×5 = 40000.\nJami: 27000+52000+40000 = 119000 so'm."
+},
+{
+  q:"3 ta qopning jami og'irligi 84 kg. Birinchi qop ikkinchidan 5 kg og'ir, ikkinchi qop uchinchidan 4 kg yengil bo'lsa, uchinchi qop og'irligini toping.",
+  options:["11","25","7","29"],
+  correct:3,
+  solution:"3-qop = x. 2-qop = x−4. 1-qop = (x−4)+5 = x+1.\nYig'indi: (x+1)+(x−4)+x = 84.\n3x−3 = 84 → 3x = 87 → x = 29 kg."
+}
+
 ];
 const UZ_MONTHS=["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"];
 const UZ_WEEKDAYS=["yakshanba","dushanba","seshanba","chorshanba","payshanba","juma","shanba"];
@@ -313,6 +1439,20 @@ function genId(){return "u"+Math.random().toString(36).slice(2)+Date.now().toStr
 function fmt(s){s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 function levelInfo(xp){var lvl=1,need=100,total=0;while(lvl<999&&xp>=total+need){total+=need;lvl++;need=Math.round(need*1.32);}var into=xp-total;var rank=lvl>=10?"Daho":lvl>=6?"Usta":lvl>=3?"Bilimdon":"Boshlovchi";return{level:lvl,rank:rank,into:into,need:need,pct:Math.min(1,into/need)};}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
+function renderQ(s){
+  // Savol matni ichidagi <svg>...</svg> qismini chizma sifatida qoldiradi, qolgan matnni xavfsiz escape qiladi.
+  s=String(s);
+  var idx=s.indexOf("<svg");
+  if(idx<0) return esc(s);
+  var endTag="</svg>";
+  var end=s.indexOf(endTag);
+  if(end<0) return esc(s);
+  end=end+endTag.length;
+  var before=s.slice(0,idx).replace(/<br\s*\/?>(\s*)$/i,"");
+  var svg=s.slice(idx,end);
+  var after=s.slice(end);
+  return esc(before)+svg+(after?esc(after):"");
+}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 
 function lbPush(id,name,score){if(!fbdb)return;try{fbdb.ref("lb/daily/"+today.key+"/"+id).update({name:name,ts:Date.now(),correct:firebase.database.ServerValue.increment(score),attempts:firebase.database.ServerValue.increment(1)});var wk=weekKey(today.key);fbdb.ref("lb/weekly/"+wk+"/"+id).update({name:name,ts:Date.now(),correct:firebase.database.ServerValue.increment(score)});}catch(e){}}
@@ -476,7 +1616,7 @@ function viewQuiz(){var Q=questions()[state.current];var sel=state.selections[st
  return '<div><div class="top"><span class="timer" id="tmrbox">'+I.timer+' <span id="tmr">'+fmt(TEST-Math.floor((Date.now()-state.startedAt)/1000))+'</span></span>'+mute()+'</div>'
  +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px"><span class="disp" style="font-weight:800;font-size:17px;color:#fff">'+String(state.current+1).padStart(2,"0")+'<span style="opacity:.75"> / 10</span></span><span style="font-size:13.5px;color:rgba(255,255,255,.85)">'+cnt+' ta belgilandi</span></div>'
  +'<div class="seg">'+segs+'</div>'
- +'<div class="fade" style="margin-top:18px"><div class="card" style="padding:20px"><h2 class="disp" style="font-size:clamp(18px,5vw,24px);line-height:1.35;font-weight:700;margin:0">'+esc(Q.q)+'</h2></div>'
+ +'<div class="fade" style="margin-top:18px"><div class="card" style="padding:20px"><h2 class="disp" style="font-size:clamp(18px,5vw,24px);line-height:1.35;font-weight:700;margin:0">'+renderQ(Q.q)+'</h2></div>'
  +'<div style="display:flex;flex-direction:column;gap:11px;margin-top:14px">'+opts+'</div></div>'
  +'<div style="display:flex;gap:12px;margin-top:22px">'+navHtml+'</div></div>';}
 
@@ -490,7 +1630,7 @@ function viewResult(){var qs=questions();var res=state.result;var msg=scoreMsg(r
    chart='<h3 class="disp h" style="font-size:22px;margin:26px 0 12px;display:flex;align-items:center;gap:8px">'+I.bars+' Taraqqiyot</h3><div class="card" style="padding:18px 14px 12px"><div style="display:flex;align-items:flex-end;gap:6px;height:150px">'+bars+'</div><div style="text-align:center;font-size:12px;color:var(--ink2);margin-top:8px">Kunlik jami to\'g\'ri javoblar</div></div>';}
  var analysis="";qs.forEach((Q,qi)=>{var us=res.selections[qi];var ok=us===Q.correct;if(state.onlyMistakes&&ok)return;
    var o=Q.options.map((opt,oi)=>{var cls="opt dis";if(oi===Q.correct)cls+=" correct";else if(oi===us)cls+=" wrong";var tag="";if(oi===Q.correct)tag='<span style="font-size:12px;font-weight:800;color:var(--green)">TO\'G\'RI</span>';else if(oi===us)tag='<span style="font-size:12px;font-weight:800;color:var(--red)">SIZNING JAVOBINGIZ</span>';return '<div class="'+cls+'" style="font-size:15.5px;padding:11px 13px"><span class="badge" style="width:28px;height:28px;font-size:13.5px">'+LETTERS[oi]+'</span><span style="flex:1">'+esc(opt)+'</span>'+tag+'</div>';}).join("");
-   analysis+='<div class="card" style="padding:18px 18px 16px"><div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:13px"><span style="flex:0 0 auto;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:'+(ok?'var(--green)':'var(--red)')+';color:#fff">'+(ok?I.check:I.x)+'</span><div class="disp" style="font-weight:700;font-size:17px;line-height:1.32;padding-top:2px"><span style="color:var(--ink2)">'+(qi+1)+'.</span> '+esc(Q.q)+'</div></div><div style="display:flex;flex-direction:column;gap:8px">'+o+'</div><div class="sol">'+I.bulb+'<div style="font-size:14px;line-height:1.65"><b>Yechish usuli:</b><br>'+esc(Q.solution)+'</div></div></div>';});
+   analysis+='<div class="card" style="padding:18px 18px 16px"><div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:13px"><span style="flex:0 0 auto;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:'+(ok?'var(--green)':'var(--red)')+';color:#fff">'+(ok?I.check:I.x)+'</span><div class="disp" style="font-weight:700;font-size:17px;line-height:1.32;padding-top:2px"><span style="color:var(--ink2)">'+(qi+1)+'.</span> '+renderQ(Q.q)+'</div></div><div style="display:flex;flex-direction:column;gap:8px">'+o+'</div><div class="sol">'+I.bulb+'<div style="font-size:14px;line-height:1.65"><b>Yechish usuli:</b><br>'+esc(Q.solution)+'</div></div></div>';});
  if(state.onlyMistakes&&wrong===0)analysis='<div class="card" style="padding:18px;text-align:center;color:var(--green);font-weight:700">Birorta ham xato yo\'q — barakalla! 🎉</div>';
 
  return '<div class="fade"><div class="top"><span class="kicker">'+I.trophy+' Natija</span>'+mute()+'</div>'
