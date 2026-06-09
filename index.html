@@ -1821,6 +1821,9 @@ function genId(){return "u"+Math.random().toString(36).slice(2)+Date.now().toStr
 function fmt(s){s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 function levelInfo(xp){var lvl=1,need=100,total=0;while(lvl<999&&xp>=total+need){total+=need;lvl++;need=Math.round(need*1.32);}var into=xp-total;var rank=lvl>=10?"Daho":lvl>=6?"Usta":lvl>=3?"Bilimdon":"Boshlovchi";return{level:lvl,rank:rank,into:into,need:need,pct:Math.min(1,into/need)};}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
+function escAttr(v){return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function escTa(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function qLabel(v){return String(v).replace(/<svg[\s\S]*?<\/svg>/g," [chizma] ").replace(/<[^>]*>/g,"");}
 function renderQ(s){
   s=String(s);
   if(s.indexOf("<svg")>=0){
@@ -1844,6 +1847,7 @@ function lbLoadDaily(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("lb
 function lbLoadWeekly(){if(!fbdb)return Promise.resolve(null);var wk=weekKey(today.key);return fbdb.ref("lb/weekly/"+wk).once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>null);}
 function loadBank(){if(!fbdb)return Promise.resolve([]);return fbdb.ref("bank").once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>[]);}
 function loadConfig(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("config/cooldownMin").once("value").then(s=>s.val()).catch(()=>null);}
+function loadSeeded(){if(!fbdb)return Promise.resolve(false);return fbdb.ref("config/seeded").once("value").then(function(s){return s.val()===true;}).catch(function(){return false;});}
 function bankAdd(q){if(!fbdb)return Promise.resolve(false);return fbdb.ref("bank").push(q).then(()=>true).catch(()=>false);}
 function bankDel(id){if(!fbdb)return Promise.resolve(false);return fbdb.ref("bank/"+id).remove().then(()=>true).catch(()=>false);}
 function saveCooldown(n){if(!fbdb)return Promise.resolve(false);return fbdb.ref("config").update({cooldownMin:n}).then(()=>true).catch(()=>false);}
@@ -1872,12 +1876,13 @@ const I={
  redo:'<svg class="lic" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
  trash:'<svg class="lic" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
  play:'<svg class="lic" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+ edit:'<svg class="lic" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
 };
 const today=todayInfo();
 let timerInt=null,countInt=null;
 const state={phase:"loading",profile:null,result:null,history:[],bank:[],cooldownMin:COOLDOWN_DEFAULT,
   variant:null,selections:Array(10).fill(null),current:0,startedAt:0,remaining:TEST,
-  muted:false,counted:false,confetti:false,onlyMistakes:true,submitted:false,adminTab:"daily",topic:"all",mistakeMode:false};
+  muted:false,counted:false,confetti:false,onlyMistakes:true,submitted:false,adminTab:"daily",topic:"all",mistakeMode:false,editId:null,editData:null,seeded:false};
 function questions(){if(state.phase==="result"&&state.result)return state.result.questions;return state.variant||[];}
 function scoreMsg(s,total){total=total||10;var p=s/total;return p>=0.9?{t:"Ajoyib!",e:"🎉",c:"var(--green)"}:p>=0.7?{t:"Yaxshi ish!",e:"👏",c:"var(--blue)"}:p>=0.5?{t:"O'rtacha — mashq qiling.",e:"💪",c:"var(--blue)"}:{t:"Yana urinib ko'ring.",e:"📚",c:"var(--red)"};}
 function nextAllowedTs(){return state.result?state.result.finishedAt+state.cooldownMin*60000:0;}
@@ -1888,7 +1893,7 @@ const mute=()=>'<button class="icbtn" data-act="mute">'+(state.muted?I.mute:I.vo
 function pickPool(){var bank=state.bank||[];return bank.length>=10?bank:bank.concat(BUILTIN);}
 var TOPICS={m1:"1. Natural sonlar",m2:"2. Bo'linish, EKUB-EKUK",m3:"3. Oddiy kasrlar",m4:"4. O'nli kasrlar",m5:"5. Ratsional sonlar",m6:"6. Daraja",m7:"7. Qism va foiz",m8:"8. Perimetr va yuza",m9:"9. Fazoviy jismlar",m10:"10. O'lchov birliklari",m11:"11. Birhadlar",m12:"12. Ko'phadlar",m13:"13. Chiziqli tenglama",m14:"14. Tenglamalar sistemasi",m15:"15. Matnli masalalar",m16:"16. Jadval va grafik",m17:"17. Burchak va masofa",m18:"18. Kombinatorika"};
 var TOPIC_ICON={m1:"🔢",m2:"➗",m3:"🍕",m4:"🔟",m5:"➖",m6:"⬆️",m7:"％",m8:"⬛",m9:"🧊",m10:"📏",m11:"✖️",m12:"🧮",m13:"⚖️",m14:"🔗",m15:"📖",m16:"📊",m17:"📐",m18:"🎲"};
-function topicCounts(){var c={};(BUILTIN||[]).forEach(function(q){var t=q.topic||"aralash";c[t]=(c[t]||0)+1;});return c;}
+function topicCounts(){var c={};pickPool().forEach(function(q){var t=q.topic||"aralash";c[t]=(c[t]||0)+1;});return c;}
 function pickPoolTopic(){
   var pool=pickPool();
   if(state.topic && state.topic!=="all"){
@@ -2120,7 +2125,7 @@ function exitLive(){ liveCleanup(); live.role=null; live.code=null; live.roomDat
 function init(){
   try{var params=new URLSearchParams(location.search);if(ADMIN_KEY&&params.get("admin")===ADMIN_KEY){state.phase="admin";state.adminTab="daily";render();return;}}catch(e){}
   render();
-  Promise.all([loadConfig(),loadBank()]).then(function(r){var cm=r[0];if(typeof cm==="number"&&cm>0)state.cooldownMin=cm;state.bank=r[1]||[];routeStudent();});
+  Promise.all([loadConfig(),loadBank(),loadSeeded()]).then(function(r){var cm=r[0];if(typeof cm==="number"&&cm>0)state.cooldownMin=cm;state.bank=r[1]||[];state.seeded=r[2];routeStudent();});
 }
 function routeStudent(){
   state.profile=LS.get(K.profile);state.history=LS.get(K.history)||[];
@@ -2240,7 +2245,7 @@ function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);
  +'</div>';}
 function topicChips(){
   var sel=state.topic||"all";var tc=topicCounts();
-  var chips='<button class="tcard'+(sel==="all"?" on":"")+'" data-act="setTopic" data-val="all"><span class="tcard-ic">🎯</span><span class="tcard-name">Hammasi</span><span class="tcard-n">'+(BUILTIN?BUILTIN.length:0)+'</span></button>';
+  var chips='<button class="tcard'+(sel==="all"?" on":"")+'" data-act="setTopic" data-val="all"><span class="tcard-ic">🎯</span><span class="tcard-name">Hammasi</span><span class="tcard-n">'+pickPool().length+'</span></button>';
   Object.keys(TOPICS).forEach(function(k){
     if(k==="aralash")return;
     var n=tc[k]||0; if(n<4)return;
@@ -2323,7 +2328,10 @@ function viewAdmin(){
 }
 function viewBank(){
  if(!fbdb)return '<div class="fade"><div class="top"><span class="kicker">'+I.trophy+' Ustoz paneli</span></div>'+adminTabs()+'<div class="card" style="padding:16px;color:var(--ink2);line-height:1.5">Savollar bazasi uchun Firebase kerak. Faylga FB_CONFIG qiymatlarini qo\'shing.</div></div>';
- var sels="";for(var j=0;j<4;j++)sels+='<option value="'+j+'">'+LETTERS[j]+'</option>';
+ var ed=state.editData||{q:"",options:["","","",""],correct:0,solution:"",topic:"m1"};
+ var editing=!!state.editId;
+ var sels="";for(var j=0;j<4;j++)sels+='<option value="'+j+'"'+(ed.correct===j?' selected':'')+'>'+LETTERS[j]+'</option>';
+ var topsel="";for(var k=1;k<=18;k++){var tk="m"+k;topsel+='<option value="'+tk+'"'+(ed.topic===tk?' selected':'')+'>'+TOPICS[tk]+'</option>';}
  return '<div class="fade"><div class="top"><span class="kicker">'+I.trophy+' Ustoz paneli</span></div>'+adminTabs()
  +'<div class="card" style="padding:16px"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:8px">Oraliq vaqti</div>'
  +'<div style="display:flex;gap:10px;align-items:center"><input id="cdmin" type="number" min="1" max="60" class="input" style="width:110px" value="'+state.cooldownMin+'"><span style="color:var(--ink2);font-size:14px">daqiqa</span><button class="btn btn-ghost" data-act="saveCd" style="padding:12px 16px;margin-left:auto">Saqlash</button></div></div>'
@@ -2331,12 +2339,13 @@ function viewBank(){
  +'<div style="font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:9px">Ustunlar: <b>Savol | A | B | C | D | To\'g\'ri (A/B/C/D) | Yechim</b>. Tab yoki | bilan ajrating.</div>'
  +'<textarea id="bulk" class="input" placeholder="Savollarni shu yerga joylang…" style="min-height:120px;resize:vertical;font-size:13.5px"></textarea>'
  +'<button class="btn btn-primary" data-act="importQ" style="width:100%;margin-top:10px">Import qilish</button></div>'
- +'<div class="card" style="padding:16px;margin-top:14px"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:10px">Bitta savol qo\'shish</div>'
- +'<textarea id="qa" class="input" placeholder="Savol matni" style="min-height:54px;resize:vertical"></textarea>'
- +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><input id="oa0" class="input" placeholder="A varianti"><input id="oa1" class="input" placeholder="B varianti"><input id="oa2" class="input" placeholder="C varianti"><input id="oa3" class="input" placeholder="D varianti"></div>'
- +'<div style="display:flex;gap:8px;align-items:center;margin-top:8px"><span style="font-size:13px;color:var(--ink2)">To\'g\'ri javob:</span><select id="ca" class="input" style="width:auto;padding:10px 12px">'+sels+'</select></div>'
- +'<textarea id="sa" class="input" placeholder="Yechish usuli (izoh)" style="min-height:44px;resize:vertical;margin-top:8px"></textarea>'
- +'<button class="btn btn-primary" data-act="addQ" style="width:100%;margin-top:12px">Bazaga qo\'shish</button></div>'
+ +'<div class="card" style="padding:16px;margin-top:14px'+(editing?';border:2px solid var(--blue);box-shadow:0 0 0 4px rgba(14,124,196,.12)':'')+'"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:10px">'+(editing?'✏️ Savolni tahrirlash':'Bitta savol qo\'shish')+'</div>'
+ +'<textarea id="qa" class="input" placeholder="Savol matni" style="min-height:54px;resize:vertical">'+escTa(ed.q)+'</textarea>'
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><input id="oa0" class="input" placeholder="A varianti" value="'+escAttr(ed.options[0]||"")+'"><input id="oa1" class="input" placeholder="B varianti" value="'+escAttr(ed.options[1]||"")+'"><input id="oa2" class="input" placeholder="C varianti" value="'+escAttr(ed.options[2]||"")+'"><input id="oa3" class="input" placeholder="D varianti" value="'+escAttr(ed.options[3]||"")+'"></div>'
+ +'<div style="display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap"><span style="font-size:13px;color:var(--ink2)">To\'g\'ri:</span><select id="ca" class="input" style="width:auto;padding:10px 12px">'+sels+'</select><span style="font-size:13px;color:var(--ink2)">Mavzu:</span><select id="qtopic" class="input" style="flex:1;min-width:150px;padding:10px 12px">'+topsel+'</select></div>'
+ +'<textarea id="sa" class="input" placeholder="Yechish usuli (izoh)" style="min-height:44px;resize:vertical;margin-top:8px">'+escTa(ed.solution)+'</textarea>'
+ +'<div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-primary" data-act="saveQ" style="flex:1">'+(editing?'Saqlash':'Bazaga qo\'shish')+'</button>'+(editing?'<button class="btn btn-ghost" data-act="cancelEdit">Bekor</button>':'')+'</div></div>'
+ +'<div id="seedbox"></div>'
  +'<h3 class="disp h" style="font-size:18px;margin:22px 0 10px" id="banktitle">Bazadagi savollar</h3>'
  +'<div class="card" id="banklist" style="padding:8px"></div><div style="height:20px"></div></div>';
 }
@@ -2357,20 +2366,37 @@ function fillAdmin(){
 function fillBank(){
  var box=document.getElementById("banklist");if(!box)return;
  box.innerHTML='<div style="padding:14px;color:var(--ink2)">Yuklanmoqda…</div>';
- loadBank().then(function(list){
-   state.bank=list;
+ Promise.all([loadBank(),loadSeeded()]).then(function(r){
+   var list=r[0]||[];state.bank=list;state.seeded=r[1];
+   var sb=document.getElementById("seedbox");
+   if(sb){sb.innerHTML=state.seeded?'':'<div class="card" style="padding:16px;margin-top:14px;border-left:4px solid var(--amber)"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:6px">📥 Asosiy testlar hali yuklanmagan</div><div style="font-size:13px;color:var(--ink2);line-height:1.55;margin-bottom:10px">231 ta tayyor testni bazaga yuklang \u2014 shundan so\'ng ularni shu yerda tahrirlash va o\'chirish mumkin bo\'ladi. Bu amal faqat bir marta bajariladi.</div><button class="btn btn-primary" data-act="seedBank" style="width:100%">231 ta testni bazaga yuklash</button></div>';}
    var t=document.getElementById("banktitle");if(t)t.textContent="Bazadagi savollar ("+list.length+")";
-   if(!list.length){box.innerHTML='<div style="padding:14px;color:var(--ink2)">Hali savol yo\'q.</div>';return;}
-   box.innerHTML=list.map(function(q){return '<div class="srow"><span style="flex:1;font-size:14.5px">'+esc(q.q)+'&nbsp;<b style="color:var(--green)">('+LETTERS[q.correct]+')</b></span><button class="delx" data-act="delQ" data-id="'+q.id+'">'+I.trash+'</button></div>';}).join("");
+   if(!list.length){box.innerHTML='<div style="padding:14px;color:var(--ink2)">Hali savol yo\'q. Yuqoridagi tugma orqali asosiy testlarni yuklang yoki yangi savol qo\'shing.</div>';return;}
+   box.innerHTML=list.map(function(q){return '<div class="srow"><span style="flex:1;font-size:14px;line-height:1.4">'+esc(qLabel(q.q).slice(0,140))+'&nbsp;<b style="color:var(--green)">('+LETTERS[q.correct]+')</b></span><button class="delx" data-act="editQ" data-id="'+q.id+'" style="color:var(--blue)">'+I.edit+'</button><button class="delx" data-act="delQ" data-id="'+q.id+'">'+I.trash+'</button></div>';}).join("");
  });
 }
-function doAddQ(){
+function doSaveQ(){
  var q=(document.getElementById("qa").value||"").trim();
- var opts=[0,1,2,3].map(j=>(document.getElementById("oa"+j).value||"").trim());
+ var opts=[0,1,2,3].map(function(j){return (document.getElementById("oa"+j).value||"").trim();});
  var c=parseInt(document.getElementById("ca").value,10)||0;
- var s=(document.getElementById("sa").value||"").trim();
- if(!q||opts.some(o=>!o)||!s){flash("Barcha maydonlarni to'ldiring");return;}
- bankAdd({q:q,options:opts,correct:c,solution:s}).then(function(ok){if(ok){flash("Qo'shildi");document.getElementById("qa").value="";[0,1,2,3].forEach(j=>document.getElementById("oa"+j).value="");document.getElementById("sa").value="";fillBank();}else flash("Xato");});
+ var tpEl=document.getElementById("qtopic");var tp=tpEl?tpEl.value:"m1";
+ var sol=(document.getElementById("sa").value||"").trim();
+ if(!q||opts.some(function(o){return !o;})||!sol){flash("Barcha maydonlarni to'ldiring");return;}
+ var obj={q:q,options:opts,correct:c,solution:sol,topic:tp};
+ if(state.editId){
+   if(!fbdb){flash("Firebase kerak");return;}
+   fbdb.ref("bank/"+state.editId).update(obj).then(function(){flash("Saqlandi \u2713");state.editId=null;state.editData=null;render();}).catch(function(){flash("Saqlashda xato");});
+ }else{
+   bankAdd(obj).then(function(ok){if(ok){flash("Qo'shildi \u2713");state.editData=null;render();}else flash("Xato");});
+ }
+}
+function startEdit(id){var q=(state.bank||[]).filter(function(x){return x.id===id;})[0];if(!q){flash("Topilmadi");return;}state.editId=id;state.editData={q:q.q,options:(q.options||["","","",""]).slice(),correct:q.correct||0,solution:q.solution||"",topic:q.topic||"m1"};render();try{window.scrollTo(0,0);}catch(e){}}
+function cancelEdit(){state.editId=null;state.editData=null;render();}
+function seedBank(){
+ if(!fbdb){flash("Firebase kerak");return;}
+ flash("231 ta test yuklanmoqda…");
+ var arr=BUILTIN.map(function(x){return {q:x.q,options:x.options.slice(),correct:x.correct,solution:x.solution,topic:x.topic};});
+ bankImport(arr).then(function(ok){if(ok){fbdb.ref("config").update({seeded:true}).then(function(){state.seeded=true;flash("Yuklandi! Endi tahrirlash mumkin.");render();});}else flash("Yuklashda xato");});
 }
 function doDelQ(id){bankDel(id).then(function(ok){if(ok){flash("O'chirildi");fillBank();}else flash("Xato");});}
 function bankImport(list){
@@ -2417,7 +2443,10 @@ app.addEventListener("click",function(e){
  else if(a==="tabDaily"){state.adminTab="daily";render();}
  else if(a==="tabWeekly"){state.adminTab="weekly";render();}
  else if(a==="tabBank"){state.adminTab="bank";render();}
- else if(a==="addQ")doAddQ();
+ else if(a==="saveQ")doSaveQ();
+ else if(a==="editQ")startEdit(t.dataset.id);
+ else if(a==="cancelEdit")cancelEdit();
+ else if(a==="seedBank")seedBank();
  else if(a==="importQ")doImport();
  else if(a==="delQ")doDelQ(t.dataset.id);
  else if(a==="saveCd")doSaveCd();
