@@ -3363,7 +3363,15 @@ function fillBank(){
  Promise.all([loadBank(),loadSeeded()]).then(function(r){
    var list=r[0]||[];state.bank=list;state.seeded=r[1];
    var sb=document.getElementById("seedbox");
-   if(sb){sb.innerHTML=state.seeded?'':'<div class="card" style="padding:16px;margin-top:14px;border-left:4px solid var(--amber)"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:6px">📥 Asosiy testlar hali yuklanmagan</div><div style="font-size:13px;color:var(--ink2);line-height:1.55;margin-bottom:10px">231 ta tayyor testni bazaga yuklang \u2014 shundan so\'ng ularni shu yerda tahrirlash va o\'chirish mumkin bo\'ladi. Bu amal faqat bir marta bajariladi.</div><button class="btn btn-primary" data-act="seedBank" style="width:100%">231 ta testni bazaga yuklash</button></div>';}
+   if(sb){
+     if(!state.seeded){
+       sb.innerHTML='<div class="card" style="padding:16px;margin-top:14px;border-left:4px solid var(--amber)"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:6px">📥 Asosiy testlar hali yuklanmagan</div><div style="font-size:13px;color:var(--ink2);line-height:1.55;margin-bottom:10px">'+BUILTIN.length+' ta tayyor testni bazaga yuklang \u2014 shundan so\'ng ularni shu yerda tahrirlash va o\'chirish mumkin bo\'ladi.</div><button class="btn btn-primary" data-act="seedBank" style="width:100%">'+BUILTIN.length+' ta testni bazaga yuklash</button></div>';
+     } else {
+       var have={};list.forEach(function(x){have[x.q]=1;});
+       var miss=BUILTIN.filter(function(x){return !have[x.q];}).length;
+       sb.innerHTML = miss>0 ? '<div class="card" style="padding:16px;margin-top:14px;border-left:4px solid var(--green)"><div class="disp" style="font-weight:800;font-size:15px;margin-bottom:6px">🔄 '+miss+' ta yangi test mavjud</div><div style="font-size:13px;color:var(--ink2);line-height:1.55;margin-bottom:10px">Fayldagi yangi testlar bazada yo\'q. Ularni qo\'shsangiz, o\'quvchilarga ham chiqadi (eski tahrirlaringiz saqlanadi).</div><button class="btn btn-green" data-act="syncBank" style="width:100%">'+miss+' ta yangi testni qo\'shish</button></div>' : '';
+     }
+   }
    var t=document.getElementById("banktitle");if(t)t.textContent="Bazadagi savollar ("+list.length+")";
    if(!list.length){box.innerHTML='<div style="padding:14px;color:var(--ink2)">Hali savol yo\'q. Yuqoridagi tugma orqali asosiy testlarni yuklang yoki yangi savol qo\'shing.</div>';return;}
    box.innerHTML=list.map(function(q){return '<div class="srow"><span style="flex:1;font-size:14px;line-height:1.4">'+esc(qLabel(q.q).slice(0,140))+'&nbsp;<b style="color:var(--green)">('+LETTERS[q.correct]+')</b></span><button class="delx" data-act="editQ" data-id="'+q.id+'" style="color:var(--blue)">'+I.edit+'</button><button class="delx" data-act="delQ" data-id="'+q.id+'">'+I.trash+'</button></div>';}).join("");
@@ -3388,9 +3396,17 @@ function startEdit(id){var q=(state.bank||[]).filter(function(x){return x.id===i
 function cancelEdit(){state.editId=null;state.editData=null;render();}
 function seedBank(){
  if(!fbdb){flash("Firebase kerak");return;}
- flash("231 ta test yuklanmoqda…");
+ flash(BUILTIN.length+" ta test yuklanmoqda…");
  var arr=BUILTIN.map(function(x){return {q:x.q,options:x.options.slice(),correct:x.correct,solution:x.solution,topic:x.topic};});
  bankImport(arr).then(function(ok){if(ok){fbdb.ref("config").update({seeded:true}).then(function(){state.seeded=true;flash("Yuklandi! Endi tahrirlash mumkin.");render();});}else flash("Yuklashda xato");});
+}
+function syncBank(){
+ if(!fbdb){flash("Firebase kerak");return;}
+ var have={};(state.bank||[]).forEach(function(x){have[x.q]=1;});
+ var miss=BUILTIN.filter(function(x){return !have[x.q];});
+ if(miss.length===0){flash("Yangi test yo'q \u2014 baza to'liq");return;}
+ flash(miss.length+" ta yangi test qo'shilmoqda…");
+ bankImport(miss.map(function(x){return {q:x.q,options:x.options.slice(),correct:x.correct,solution:x.solution,topic:x.topic};})).then(function(ok){if(ok){flash(miss.length+" ta yangi test qo'shildi \u2713");render();}else flash("Qo'shishda xato");});
 }
 function doDelQ(id){bankDel(id).then(function(ok){if(ok){flash("O'chirildi");fillBank();}else flash("Xato");});}
 function bankImport(list){
@@ -3441,6 +3457,7 @@ app.addEventListener("click",function(e){
  else if(a==="editQ")startEdit(t.dataset.id);
  else if(a==="cancelEdit")cancelEdit();
  else if(a==="seedBank")seedBank();
+ else if(a==="syncBank")syncBank();
  else if(a==="importQ")doImport();
  else if(a==="delQ")doDelQ(t.dataset.id);
  else if(a==="saveCd")doSaveCd();
