@@ -1,6 +1,6 @@
 const LOGO = "img/logo.webp";
 /* ===== FIREBASE ===== */
-const FB_CONFIG = { apiKey:"AIzaSyCZF3sgnr8mLev5iwPC0oAQ49l-Op7ZTIo", authDomain:"raqam-hujumi.firebaseapp.com", databaseURL:"https://raqam-hujumi-default-rtdb.firebaseio.com", projectId:"raqam-hujumi", storageBucket:"raqam-hujumi.firebasestorage.app", messagingSenderId:"729365767297", appId:"1:729365767297:web:211706400fe31689ec1980" };
+const FB_CONFIG = { apiKey:"AIzaSyCZF3sgnr8mLev5iWPC0oAQ49l-Op7ZTIo", authDomain:"raqam-hujumi.firebaseapp.com", databaseURL:"https://raqam-hujumi-default-rtdb.firebaseio.com", projectId:"raqam-hujumi", storageBucket:"raqam-hujumi.firebasestorage.app", messagingSenderId:"729365767297", appId:"1:729365767297:web:211706400fe31689ec1980" };
 const COOLDOWN_DEFAULT = 0;
 const TEST = 10 * 60;
 let fbdb=null,fbauth=null;
