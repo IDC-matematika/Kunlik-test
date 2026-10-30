@@ -73,7 +73,7 @@ function renderQ(s){
 }
 function fracify(str){return String(str).replace(/(?<!\d)(\d{1,3})\/(\d{1,3})(?!\d)(?![^<]*>)/g,function(m,a,b){return '<span class="frac"><span class="fr-n">'+a+'</span><span class="fr-d">'+b+'</span></span>';});}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-function lbPush(id,name,score,cls){if(!fbdb)return;whenAuth().then(function(){var uid=authUid();if(!uid)return;try{var ex=cls?{cls:cls}:{};fbdb.ref("lb/daily/"+today.key+"/"+id).update(Object.assign(ex,{name:name,uid:uid,ts:Date.now(),correct:firebase.database.ServerValue.increment(score),attempts:firebase.database.ServerValue.increment(1)})).catch(function(){});var wk=weekKey(today.key);fbdb.ref("lb/weekly/"+wk+"/"+id).update(Object.assign(cls?{cls:cls}:{},{name:name,uid:uid,ts:Date.now(),correct:firebase.database.ServerValue.increment(score)})).catch(function(){});}catch(e){}});}
+function lbPush(id,name,score,cls){if(!fbdb)return;whenAuth().then(function(){var uid=authUid();if(!uid)return;try{var ex=cls?{cls:cls}:{};fbdb.ref("lb/daily/"+today.key+"/"+id).update(Object.assign(ex,{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score),attempts:firebase.database.ServerValue.increment(1)})).catch(function(){});var wk=weekKey(today.key);fbdb.ref("lb/weekly/"+wk+"/"+id).update(Object.assign(cls?{cls:cls}:{},{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score)})).catch(function(){});}catch(e){}});}
 function lbLoadDaily(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("lb/daily/"+today.key).once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>null);}
 function lbLoadWeekly(){if(!fbdb)return Promise.resolve(null);var wk=weekKey(today.key);return fbdb.ref("lb/weekly/"+wk).once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>null);}
 function loadBank(){if(!fbdb)return Promise.resolve([]);return fbdb.ref("bank").once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>[]);}
@@ -83,7 +83,7 @@ function loadSeeded(){if(!fbdb)return Promise.resolve(false);return fbdb.ref("co
 function resultPush(r,qs,sels){
   if(!fbdb)return;
   var tp={};(qs||[]).forEach(function(Q,i){if(!Q)return;var k=/^m\d+$/.test(Q.topic||"")?Q.topic:"aralash";var e=tp[k]||(tp[k]={c:0,t:0});e.t++;if(sels[i]===Q.correct)e.c++;});
-  var rec={name:String(r.name||"Mehmon").slice(0,40),cls:String(r.cls||"").slice(0,12),date:today.key,ts:Date.now(),score:r.score,total:r.total,mode:r.mode,topics:tp};
+  var rec={name:String(r.name||"Mehmon").slice(0,40),cls:String(r.cls||"").slice(0,12),date:today.key,ts:firebase.database.ServerValue.TIMESTAMP,score:r.score,total:r.total,mode:r.mode,topics:tp};
   if(r.pid)rec.pid=String(r.pid).slice(0,40);if(r.room)rec.room=String(r.room);if(typeof r.elapsed==="number")rec.elapsed=r.elapsed;
   whenAuth().then(function(){var uid=authUid();if(!uid)return;try{fbdb.ref("results/"+uid).push(rec).catch(function(){});}catch(e){}});
 }
