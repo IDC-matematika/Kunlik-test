@@ -647,16 +647,18 @@ function persistAttempt(){LS.set(K.attempt,{date:today.key,startedAt:state.start
 function normCls(v){return String(v||"").trim().replace(/\s+/g," ").toUpperCase().slice(0,12);}
 /* Ro'yxatdan o'tish: ism va sinf majburiy. Sinf "9-A" ko'rinishida saqlanadi (raqam + ixtiyoriy harf),
    shunda ustoz hisobotida bir sinf o'quvchilari bitta guruhga tushadi. */
-function isRegistered(p){return !!(p&&p.name&&p.cls);}
+var CLS_MIN=5,CLS_MAX=11;
+function validCls(c){var g=+splitCls(c).g;return g>=CLS_MIN&&g<=CLS_MAX;}
+function isRegistered(p){return !!(p&&p.name&&p.cls&&validCls(p.cls));}
 function splitCls(c){var m=String(c||"").match(/^(\d{1,2})(?:\s*-?\s*(.*))?$/);return m?{g:m[1],l:(m[2]||"").trim()}:{g:"",l:""};}
 function clsPicker(pre,cls,mt){
   var c=splitCls(cls),opts='<option value="">Sinf…</option>';
-  for(var i=1;i<=11;i++)opts+='<option value="'+i+'"'+(String(i)===c.g?' selected':'')+'>'+i+'-sinf</option>';
+  for(var i=CLS_MIN;i<=CLS_MAX;i++)opts+='<option value="'+i+'"'+(String(i)===c.g?' selected':'')+'>'+i+'-sinf</option>';
   return '<div style="display:flex;gap:10px;margin-top:'+(mt||10)+'px"><select id="'+pre+'G" class="input" style="flex:1.3;min-width:0" aria-label="Sinf">'+opts+'</select>'
   +'<input id="'+pre+'L" class="input" style="flex:1;min-width:0;text-transform:uppercase" maxlength="3" placeholder="Harfi: A, B…" value="'+escAttr(c.l)+'" aria-label="Sinf harfi"></div>';
 }
 function readCls(pre){
-  var g=(document.getElementById(pre+"G")||{}).value||"";if(!g)return null;
+  var g=(document.getElementById(pre+"G")||{}).value||"";if(!g||+g<CLS_MIN||+g>CLS_MAX)return null;
   var l=String((document.getElementById(pre+"L")||{}).value||"").toUpperCase().replace(/[^A-ZА-ЯЁЎҚҒҲʻ']/g,"").slice(0,3);
   return l?g+"-"+l:g;
 }

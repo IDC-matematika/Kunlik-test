@@ -74,7 +74,7 @@
           ".write": "auth != null && auth.uid === $uid && !data.exists()",
           ".validate": "newData.hasChildren(['name', 'cls', 'date', 'ts', 'score', 'total', 'mode'])",
           "name": { ".validate": "newData.isString() && newData.val().length <= 40" },
-          "cls": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20" },
+          "cls": { ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().matches(/^(5|6|7|8|9|10|11)(-.+)?$/)" },
           "pid": { ".validate": "newData.isString() && newData.val().length <= 40" },
           "date": { ".validate": "newData.isString() && newData.val().length === 10" },
           "ts": { ".validate": "newData.isNumber() && newData.val() <= now + 60000" },
@@ -108,7 +108,7 @@
             "finishedAt": { ".validate": "newData.isNumber()" },
             "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
             "done": { ".validate": "newData.isBoolean()" },
-            "cls": { ".validate": "newData.isString() && newData.val().length <= 20" },
+            "cls": { ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().matches(/^(5|6|7|8|9|10|11)(-.+)?$/)" },
             "$other": { ".validate": false }
           }
         }
