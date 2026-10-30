@@ -42,7 +42,7 @@ const UZ_WEEKDAYS=["yakshanba","dushanba","seshanba","chorshanba","payshanba","j
 const LETTERS=["A","B","C","D"];
 const BRAND=["#a855f7","#22d3ee","#34d399","#fbbf24","#fb5b78","#818cf8","#f472b6","#2dd4bf"];
 const FORMULAS=["a²+b²=c²","√x","πr²","∫f(x)dx","(a+b)²","∑","x²","30°","sinθ","y=kx+b","∞","ΔABC","≠","log","det"];
-const K={profile:"idc:v3:profile",last:"idc:v3:last",attempt:"idc:v3:attempt",history:"idc:v3:history",mistakes:"idc:v3:mistakes",lang:"idc:v3:lang",theme:"idc:v3:theme"};
+const K={profile:"idc:v3:profile",last:"idc:v3:last",attempt:"idc:v3:attempt",history:"idc:v3:history",mistakes:"idc:v3:mistakes",lang:"idc:v3:lang",theme:"idc:v3:theme",stats:"idc:v3:stats"};
 const LS={get(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
 function todayInfo(){var n=new Date(),y=n.getFullYear(),m=n.getMonth(),d=n.getDate();return{key:y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"),label:d+"-"+UZ_MONTHS[m]+", "+y,weekday:UZ_WEEKDAYS[n.getDay()]};}
 function shiftKey(key,delta){var a=key.split("-").map(Number);var dt=new Date(a[0],a[1]-1,a[2]+delta);return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");}
@@ -256,6 +256,7 @@ var RU={
 "17. Burchak va masofa":"17. Углы и расстояния",
 "18. Kombinatorika":"18. Комбинаторика"
 };
+Object.assign(RU,{"Mening statistikam":"Моя статистика","Mavzular, 7 kunlik progress va xatolar":"Темы, прогресс за 7 дней и ошибки","To'g'ri javoblar: ":"Правильные ответы: ","jami javob":"всего ответов","Oxirgi 7 kun":"Последние 7 дней","Mavzular bo'yicha":"По темам","Eng ko'p xato qilingan savollar":"Самые частые ошибки","Shu savollarni qayta ishlash":"Решить эти вопросы снова","Ko'proq mashq qiling: ":"Больше практики: ","Ustun balandligi — javoblar soni, to'q qismi — to'g'ri javoblar":"Высота столбца — число ответов, тёмная часть — правильные","Xato qilingan savollar yo'q 🎉":"Ошибок нет 🎉"});
 var RU_KEYS=null;
 function tr(s){
   if(state.lang!=="ru")return s;
@@ -397,7 +398,7 @@ function liveTeacherCreate(){
   var payload={
     code:live.code, status:"waiting", createdAt:Date.now(),
     teacher:live.name||"Ustoz", ownerUid:live.uid,
-    questions:live.qset.map(function(q){return {id:q.id||null,q:q.q,q_ru:q.q_ru||null,options:q.options,options_ru:q.options_ru||null,correct:q.correct,solution:q.solution,solution_ru:q.solution_ru||null};}),
+    questions:live.qset.map(function(q){return {id:q.id||null,q:q.q,q_ru:q.q_ru||null,options:q.options,options_ru:q.options_ru||null,correct:q.correct,solution:q.solution,solution_ru:q.solution_ru||null,topic:q.topic||null};}),
     students:{}, startedAt:0
   };
   live.roomRef.set(payload).then(function(){
@@ -430,7 +431,7 @@ function liveAttachRoom(){
     live.roomData=d;
     if(live.role==="student"){
       if(d.status==="running" && state.phase==="liveStudentLobby"){
-        live.qset=d.questions.map(function(q){return {id:q.id||null,q:q.q,q_ru:q.q_ru||null,options:q.options,options_ru:q.options_ru||null,correct:q.correct,solution:q.solution,solution_ru:q.solution_ru||null};});
+        live.qset=d.questions.map(function(q){return {id:q.id||null,q:q.q,q_ru:q.q_ru||null,options:q.options,options_ru:q.options_ru||null,correct:q.correct,solution:q.solution,solution_ru:q.solution_ru||null,topic:q.topic||null};});
         live.sel=Array(live.qset.length).fill(null); live.cur=0; live.submitted=false;
         live.startedAt=d.startedAt||Date.now();
         state.phase="liveStudentQuiz"; render();
@@ -477,6 +478,7 @@ function liveStudentSubmit(){
   if(live.timerInt){clearInterval(live.timerInt);live.timerInt=null;}
   var score=0; for(var i=0;i<live.qset.length;i++){ if(live.sel[i]===live.qset[i].correct)score++; }
   live.lastScore=score;
+  recordStats(live.qset,live.sel);
   if(live.roomRef){ live.roomRef.child("students/"+live.uid).update({score:score,done:true,finishedAt:Date.now()}); }
   state.phase="liveStudentResult"; render();
 }
@@ -674,6 +676,7 @@ function submitQuiz(){
     else { if(pos>=0)mistakes.splice(pos,1); }
   });
   mistakes=mistakes.slice(-100);LS.set(K.mistakes,mistakes);
+  recordStats(qs,state.selections);
   LS.set(K.profile,newProf);LS.set(K.last,result);LS.set(K.history,hist);LS.del(K.attempt);
   lbPush(newProf.id,newProf.name,score);
   if(!state.muted)sFinish();
@@ -689,6 +692,7 @@ function render(){
   else if(state.phase==="name")html=viewName();
   else if(state.phase==="intro")html=viewIntro();
   else if(state.phase==="settings")html=viewSettings();
+  else if(state.phase==="stats")html=viewStats();
   else if(state.phase==="quiz")html=viewQuiz();
   else if(state.phase==="result")html=viewResult();
   else if(state.phase==="admin"||state.phase==="adminLogin")html=isAdmin()?viewAdmin():viewAdminLogin();
@@ -735,6 +739,7 @@ function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);
  +'<div class="sect-h"><span>'+I.bars+' Mavzu</span><span class="sect-tag">'+selName+'</span></div>'
  +topicChips()
  +mistakeCard()
+ +statsCard()
  +'<button class="btn btn-primary startbtn" data-act="start">'+I.play+' Mashqni boshlash<span class="startbtn-sub">10 savol · 10 daqiqa</span></button>'
  +'</div>';}
 function viewSettings(){
@@ -768,7 +773,7 @@ function doRename(){
 }
 function clearData(){
   if(!window.confirm(tr("Hamma ma'lumot (progress, XP, tarix, xatolar) o'chirilsinmi?")))return;
-  [K.profile,K.last,K.attempt,K.history,K.mistakes].forEach(function(k){LS.del(k);});
+  [K.profile,K.last,K.attempt,K.history,K.mistakes,K.stats].forEach(function(k){LS.del(k);});
   state.profile=null; state.history=[]; state.result=null; state.variant=null;
   state.selections=Array(10).fill(null); state.mistakeMode=false; state.current=0;
   flash(tr("Tozalandi")); state.phase="rolePick"; render();
@@ -790,6 +795,82 @@ function mistakeCard(){
   +'<span class="mistcard-ic">📕</span>'
   +'<div style="flex:1"><div class="mistcard-t">Xatolar daftari</div><div class="mistcard-s">'+m.length+' ta xato savolni mashq qiling</div></div>'
   +'<span class="mistcard-go">'+I.right+'</span></div>';
+}
+/* ===== O'QUVCHI STATISTIKASI (localStorage: K.stats) =====
+   topics: {m1:{c,t}} — mavzu bo'yicha to'g'ri/jami; days: {"YYYY-MM-DD":{c,t}};
+   qs: {<ID yoki xesh>:{l:qisqa matn,tp:mavzu,n:necha marta,w:necha marta xato}} */
+function statKey(x){return x&&x.id?String(x.id):"h"+qHash(x&&x.q);}
+function loadStats(){var s=LS.get(K.stats)||{};s.topics=s.topics||{};s.days=s.days||{};s.qs=s.qs||{};return s;}
+function recordStats(qs,sels){
+  try{
+    var s=loadStats(),d=s.days[today.key]||(s.days[today.key]={c:0,t:0});
+    (qs||[]).forEach(function(Q,i){
+      if(!Q)return;var ok=sels[i]===Q.correct,tp=Q.topic||"aralash";
+      var t=s.topics[tp]||(s.topics[tp]={c:0,t:0});t.t++;if(ok)t.c++;
+      d.t++;if(ok)d.c++;
+      var k=statKey(Q),e=s.qs[k]||(s.qs[k]={l:qLabel(Q.q).slice(0,140),tp:tp,n:0,w:0});
+      e.n++;if(!ok)e.w++;e.ts=Date.now();
+    });
+    var dk=Object.keys(s.days).sort();if(dk.length>90)dk.slice(0,dk.length-90).forEach(function(k){delete s.days[k];});
+    var qk=Object.keys(s.qs);if(qk.length>600){qk.sort(function(a,b){return (s.qs[a].ts||0)-(s.qs[b].ts||0);}).slice(0,qk.length-600).forEach(function(k){delete s.qs[k];});}
+    LS.set(K.stats,s);
+  }catch(e){}
+}
+function topMissed(n){var s=loadStats();return Object.keys(s.qs).map(function(k){var e=s.qs[k];return {k:k,l:e.l,tp:e.tp,n:e.n,w:e.w};}).filter(function(e){return e.w>0;}).sort(function(a,b){return (b.w-a.w)||((b.w/b.n)-(a.w/a.n))||(b.n-a.n);}).slice(0,n||10);}
+function startTopMissedQuiz(){
+  var keys={};topMissed(10).forEach(function(e){keys[e.k]=1;});
+  var pool=pickPool().filter(function(x){return keys[statKey(x)];});
+  if(!pool.length){flash("Savollar topilmadi");return;}
+  ac();state.submitted=false;state.counted=false;state.confetti=false;state.onlyMistakes=false;state.mistakeMode=true;state.adaptiveRun=false;
+  state.variant=shuffle(pool).map(toQuiz);state.selections=Array(state.variant.length).fill(null);state.current=0;state.startedAt=Date.now();state.remaining=TEST;
+  persistAttempt();if(!state.muted)sStart();state.phase="quiz";render();
+}
+function pctColor(p){return p>=0.7?"var(--green)":(p>=0.5?"var(--blue)":"var(--red)");}
+function statsCard(){
+  var s=loadStats(),tot=0,ok=0;Object.keys(s.topics).forEach(function(k){tot+=s.topics[k].t;ok+=s.topics[k].c;});
+  return '<div class="statcard" data-act="openStats"><span class="statcard-ic">📊</span>'
+  +'<div style="flex:1"><div class="statcard-t">Mening statistikam</div><div class="statcard-s">'+(tot?('To\'g\'ri javoblar: '+Math.round(ok/tot*100)+'% · '+tot+' ta savol'):'Mavzular, 7 kunlik progress va xatolar')+'</div></div>'
+  +'<span class="statcard-go">'+I.right+'</span></div>';
+}
+function viewStats(){
+  var s=loadStats(),tot=0,ok=0;
+  var rows=Object.keys(s.topics).map(function(k){var t=s.topics[k];tot+=t.t;ok+=t.c;return {k:k,c:t.c,t:t.t,p:t.t?t.c/t.t:0};});
+  var head='<div class="fade"><div class="top"><button class="icbtn" data-act="backIntro">'+I.left+'</button><span class="kicker">'+I.bars+' Mening statistikam</span></div>';
+  if(!tot)return head+'<div class="card" style="padding:26px;text-align:center;color:var(--ink2);line-height:1.6;margin-top:12px"><div style="font-size:40px">📊</div>Hali statistika yo\'q. Bir nechta test ishlang — natijalaringiz shu yerda mavzular bo\'yicha ko\'rinadi.</div></div>';
+  var num=function(k){return parseInt(String(k).replace(/\D/g,""),10)||99;};
+  rows.sort(function(a,b){return num(a.k)-num(b.k);});
+  var weak=rows.filter(function(r){return r.t>=3;}).sort(function(a,b){return a.p-b.p;})[0];
+  var p=state.profile||{};
+  var tiles='<div class="stiles">'
+   +'<div class="stile"><div class="stile-n">'+tot+'</div><div class="stile-l">jami javob</div></div>'
+   +'<div class="stile"><div class="stile-n" style="color:'+pctColor(ok/tot)+'">'+Math.round(ok/tot*100)+'%</div><div class="stile-l">to\'g\'ri</div></div>'
+   +'<div class="stile"><div class="stile-n">'+I.flame+' '+(p.streak||0)+'</div><div class="stile-l">kun ketma-ket</div></div></div>'
+   +(weak&&weak.p<0.7?'<div class="weakbox">💡 Ko\'proq mashq qiling: <b>'+esc(TOPICS[weak.k]||weak.k)+'</b> ('+Math.round(weak.p*100)+'%)</div>':'');
+  var topicHtml=rows.map(function(r){var pc=Math.round(r.p*100);
+    return '<div class="trow"><div class="trow-h"><span class="trow-n">'+(TOPIC_ICON[r.k]||"🎯")+' '+esc(TOPICS[r.k]||"Aralash")+'</span><span class="trow-v"><b style="color:'+pctColor(r.p)+'">'+pc+'%</b> <span>'+r.c+'/'+r.t+'</span></span></div>'
+    +'<div class="trow-bar"><i style="width:'+Math.max(3,pc)+'%;background:'+pctColor(r.p)+'"></i></div></div>';}).join("");
+  /* oxirgi 7 kun: yangi statistikadan, bo'lmasa eski kunlik tarixdan (10 savollik urinishlar) */
+  var hist={};(state.history||[]).forEach(function(h){hist[h.date]=h;});
+  var days=[],mx=1;
+  for(var i=6;i>=0;i--){var dk=shiftKey(today.key,-i),d=s.days[dk],c=0,t=0;
+    if(d){c=d.c;t=d.t;}else if(hist[dk]){c=hist[dk].correct||0;t=(hist[dk].attempts||0)*10;}
+    var a=dk.split("-").map(Number),wd=new Date(a[0],a[1]-1,a[2]).getDay();
+    days.push({k:dk,c:c,t:t,wd:UZ_WEEKDAYS[wd].slice(0,3)});mx=Math.max(mx,t);}
+  var wc=0,wt=0;days.forEach(function(d){wc+=d.c;wt+=d.t;});
+  var bars=days.map(function(d){var hp=d.t?Math.max(6,d.t/mx*100):0,cp=d.t?(d.c/d.t*100):0;
+    return '<div class="dcol"><span class="dcol-v">'+(d.t?Math.round(d.c/d.t*100)+'%':'—')+'</span><div class="dcol-b" style="height:'+hp+'%" title="'+d.c+'/'+d.t+'"><i style="height:'+cp+'%"></i></div><span class="dcol-l'+(d.k===today.key?' on':'')+'">'+d.wd+'</span><span class="dcol-d">'+d.k.slice(8)+'</span></div>';}).join("");
+  var miss=topMissed(10);
+  var missHtml=miss.length?miss.map(function(e){return '<div class="srow" style="align-items:flex-start">'+(/^h[0-9a-f]{8}$/.test(e.k)?'':'<span class="idchip">'+esc(e.k)+'</span>')+'<span style="flex:1;font-size:13.5px;line-height:1.45">'+esc(e.l)+'<br><span style="color:var(--ink2);font-size:12px">'+esc(TOPICS[e.tp]||"")+'</span></span><span class="misscnt" title="xato / jami">'+e.w+'/'+e.n+'</span></div>';}).join("")
+    +'<button class="btn btn-primary" data-act="startTopMissed" style="width:100%;margin-top:12px">'+I.play+' Shu savollarni qayta ishlash</button>'
+    :'<div style="padding:14px;color:var(--green);font-weight:700;text-align:center">Xato qilingan savollar yo\'q 🎉</div>';
+  return head+tiles
+  +'<div class="sect-h"><span>'+I.cal+' Oxirgi 7 kun</span><span class="sect-tag">'+wc+'/'+wt+'</span></div>'
+  +'<div class="card" style="padding:16px 12px 12px"><div class="dchart">'+bars+'</div><div style="text-align:center;font-size:12px;color:var(--ink2);margin-top:8px">Ustun balandligi — javoblar soni, to\'q qismi — to\'g\'ri javoblar</div></div>'
+  +'<div class="sect-h"><span>'+I.bars+' Mavzular bo\'yicha</span></div>'
+  +'<div class="card" style="padding:14px 16px">'+topicHtml+'</div>'
+  +'<div class="sect-h"><span>📕 Eng ko\'p xato qilingan savollar</span></div>'
+  +'<div class="card" style="padding:8px 10px 12px">'+missHtml+'</div>'
+  +'<div style="height:20px"></div></div>';
 }
 function viewQuiz(){var QS=questions();var Q=QS[state.current];var sel=state.selections[state.current];var N=QS.length;var TOT=state.adaptiveRun?state.adaptTarget:N;var last=state.adaptiveRun?(state.current>=TOT-1):(state.current===N-1);
  var opts=LO(Q).map((o,i)=>'<button class="opt'+(sel===i?' sel':'')+'" data-act="choose" data-val="'+i+'"><span class="badge">'+LETTERS[i]+'</span><span style="flex:1">'+renderQ(o)+'</span></button>').join("");
@@ -1125,6 +1206,8 @@ app.addEventListener("click",function(e){
  else if(a==="goHome"){state.phase="rolePick";render();}
  else if(a==="setTopic"){state.topic=t.dataset.val;render();}
  else if(a==="startMistakes")startMistakeQuiz();
+ else if(a==="openStats"){state.phase="stats";render();try{window.scrollTo(0,0);}catch(e){}}
+ else if(a==="startTopMissed")startTopMissedQuiz();
  else if(a==="openSettings"){state.phase="settings";render();}
  else if(a==="backIntro"){state.phase="intro";render();}
  else if(a==="doRename")doRename();
