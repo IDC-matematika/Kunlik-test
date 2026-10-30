@@ -1,6 +1,6 @@
 /* Service worker: ilova qobig'ini keshlaydi — internet bo'lmasa ham test ishlaydi.
    Yangi versiya chiqarganda VERSION ni o'zgartiring. */
-const VERSION = "v5";
+const VERSION = "v6";
 const CACHE = "kunlik-test-" + VERSION;
 const SHELL = [
   "./",
@@ -19,7 +19,7 @@ const SHELL = [
 const CDN = /^https:\/\/(www\.gstatic\.com\/firebasejs|cdnjs\.cloudflare\.com\/ajax\/libs\/firebase|fonts\.googleapis\.com|fonts\.gstatic\.com)\//;
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: "reload" })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
@@ -45,14 +45,11 @@ self.addEventListener("fetch", (e) => {
       );
       return;
     }
-    /* Boshqa fayllar: keshdan darhol, fonda yangilash (stale-while-revalidate) */
+    /* Boshqa fayllar: avval tarmoq (yangi versiya darhol), internet bo'lmasa kesh */
     e.respondWith(
-      caches.open(CACHE).then((c) =>
-        c.match(req, { ignoreSearch: true }).then((hit) => {
-          const net = fetch(req).then((res) => { if (res.ok) c.put(req, res.clone()); return res; }).catch(() => hit);
-          return hit || net;
-        })
-      )
+      fetch(req, { cache: "no-cache" })
+        .then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); } return res; })
+        .catch(() => caches.match(req, { ignoreSearch: true }))
     );
     return;
   }
