@@ -72,9 +72,9 @@
         ".read": "auth != null && auth.uid === $uid",
         "$rid": {
           ".write": "auth != null && auth.uid === $uid && !data.exists()",
-          ".validate": "newData.hasChildren(['name', 'date', 'ts', 'score', 'total', 'mode'])",
+          ".validate": "newData.hasChildren(['name', 'cls', 'date', 'ts', 'score', 'total', 'mode'])",
           "name": { ".validate": "newData.isString() && newData.val().length <= 40" },
-          "cls": { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "cls": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20" },
           "pid": { ".validate": "newData.isString() && newData.val().length <= 40" },
           "date": { ".validate": "newData.isString() && newData.val().length === 10" },
           "ts": { ".validate": "newData.isNumber() && newData.val() <= now + 60000" },
@@ -102,7 +102,7 @@
         "students": {
           "$sid": {
             ".write": "auth != null && auth.uid === $sid && root.child('rooms').child($code).exists()",
-            ".validate": "newData.hasChildren(['name'])",
+            ".validate": "newData.hasChildren(['name', 'cls'])",
             "name": { ".validate": "newData.isString() && newData.val().length <= 40" },
             "joinedAt": { ".validate": "newData.isNumber()" },
             "finishedAt": { ".validate": "newData.isNumber()" },

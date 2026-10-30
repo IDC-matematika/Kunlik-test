@@ -10,6 +10,7 @@ Hech qanday build talab qilinmaydi: oddiy HTML/CSS/JS, ma'lumotlar Firebase Real
 ## Imkoniyatlar
 
 **O'quvchi uchun**
+- Ro'yxatdan o'tish: ism-familiya va sinf (masalan, `9-A`) majburiy — natijalar ustoz hisobotida sinf bo'yicha guruhlanadi
 - Kunlik test: 10 savol, 10 daqiqalik taymer, yechim tahlili
 - 18 ta mavzu bo'yicha tanlash, aralash, adaptiv rejim va "Xatolar daftari"
 - Streak (ketma-ket kunlar), muzlatish, XP va daraja
