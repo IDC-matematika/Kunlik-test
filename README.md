@@ -67,10 +67,11 @@ Savol formati (`data/questions.js`):
 
 Baza "Majburiy matematika" darsligi (`Yangilangan.pdf`) asosida tuzilgan: har mavzuning
 "Mavzu bo'yicha test savollari" (2 variant × 10) va kitob oxiridagi 30 ta imtihon varianti
-(10 tadan savol) to'liq bazada — yechimlari bilan; takrorlanganlari bir marta kiritilgan.
+(10 tadan savol) turlari bo'yicha har biriga shu tipdagi, lekin boshqa sonlar, kontekst va
+tuzilishdagi original savol tuzilgan (kitobdan aynan ko'chirilgan savol yo'q) — yechimlari bilan.
 Qolgan savollar ham kitob testlari darajasida (1–3 bosqichli, matnli masalalar, chizmalar).
 Yangi savol qo'shganda shu darajani saqlang: bir amalli "0,6 · 5 ni hisoblang" kabi
-savollar kiritilmaydi.
+savollar kiritilmaydi; kitobdagi savolni aynan ko'chirmang, shu turdagi yangisini tuzing.
 
 Savol matni o'zgartirilsa, eski matn xeshi `data/questions-ru.js` dagi `RETIRED_Q` ga
 qo'shiladi (Firebase bankidagi eski nusxalar testga chiqmasligi uchun) — buni
