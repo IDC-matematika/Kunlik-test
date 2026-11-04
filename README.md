@@ -44,9 +44,9 @@ Ustoz boshqa hisoblarni yaratishi/o'zgartirishi uchun ilova brauzerda ikkinchi F
 index.html              sahifa karkasi, Firebase SDK va skriptlarni ulash
 style.css               barcha uslublar
 app.js                  ilova kodi (auth, test, statistika, jonli xona, ustoz paneli)
-data/questions.js       BUILTIN — asosiy savollar bazasi (1572 savol)
+data/questions.js       BUILTIN — asosiy savollar bazasi (1537 savol, ruscha tarjimalar savol ichida)
 Yangilangan.pdf         "Majburiy matematika" darsligi — bazaning manbasi va namunasi
-data/questions-ru.js    savollarning ruscha tarjimalari va eskirgan savollar xeshlari
+data/questions-ru.js    eskirgan (o'chirilgan/almashtirilgan) savollar xeshlari (RETIRED_Q)
 img/                    logotip va PWA ikonlari
 manifest.json           PWA manifesti
 sw.js                   service worker (oflayn kesh)

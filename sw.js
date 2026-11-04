@@ -1,6 +1,6 @@
 /* Service worker: ilova qobig'ini keshlaydi — internet bo'lmasa ham test ishlaydi.
    Yangi versiya chiqarganda VERSION ni o'zgartiring. */
-const VERSION = "v9";
+const VERSION = "v10";
 const CACHE = "kunlik-test-" + VERSION;
 const SHELL = [
   "./",
