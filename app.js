@@ -172,6 +172,12 @@ var RU={
 "kun ketma-ket":"дней подряд",
 "jami XP":"всего XP",
 "Mavzu":"Тема",
+"Kunlik test: 10 savol, 10 daqiqa. Streak, XP va reyting.":"Ежедневный тест: 10 вопросов, 10 минут. Серия, XP и рейтинг.",
+"Ustoz bergan kod bilan jonli testga qo'shiling.":"Присоединяйтесь к живому тесту по коду учителя.",
+"Jonli xona oching, natijalar va savollar bazasini boshqaring.":"Откройте живую комнату, управляйте результатами и базой вопросов.",
+"Mavzularni yon tomonga suring":"Листайте темы в сторону",
+"Savollar topilmadi":"Вопросы не найдены",
+"Savollar":"Вопросы",
 "Hammasi":"Все",
 "Mashqni boshlash":"Начать тренировку",
 "10 savol · 10 daqiqa":"10 вопросов · 10 минут",
@@ -512,12 +518,14 @@ function liveRenderTeacherStudents(){
 function viewRolePick(){
   return '<div class="fade" style="min-height:440px;display:flex;flex-direction:column;justify-content:center">'
   +'<div style="text-align:center;margin-bottom:26px"><div style="display:inline-flex">'+wordmark(1.1,1)+'</div></div>'
-  +'<div class="card" style="padding:24px">'
-  +'<h1 class="disp" style="font-size:23px;font-weight:800;margin:0 0 18px;text-align:center">Rejimni tanlang</h1>'
-  +'<button class="btn btn-primary gbtn" data-act="goTeacher" style="width:100%;margin-bottom:12px;padding:16px;--gc:rgba(217,70,239,.6)">'+I.trophy+' Ustozlar uchun</button>'
-  +'<button class="btn btn-green gbtn" data-act="goStudent" style="width:100%;margin-bottom:12px;padding:16px;--gc:rgba(16,201,138,.6);animation-delay:.35s">'+I.play+' O\'quvchilar uchun</button>'
-  +(pwa.prompt?'<button class="btn btn-ghost" data-act="installApp" style="width:100%;margin-top:14px">📲 Telefonga o\'rnatish</button>':'')
-  +'<button class="btn gbtn" data-act="goSolo" style="width:100%;padding:14px;background:linear-gradient(135deg,#fbbf24,#fb923c,#f97316);color:#fff;border:none;--gc:rgba(251,146,60,.7);animation-delay:.7s">Yakka mashq (o\'zim uchun)</button>'
+  +'<div class="card" style="padding:18px 16px">'
+  +'<h1 class="disp" style="font-size:22px;font-weight:800;margin:4px 0 14px;text-align:center">Rejimni tanlang</h1>'
+  +'<div style="display:flex;flex-direction:column;gap:10px">'
+  +'<button class="rolecard" data-act="goSolo" style="--rc:rgba(251,146,60,.9);--rcg:linear-gradient(135deg,#fbbf24,#f97316)"><span class="rolecard-ic">'+I.flame+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">Yakka mashq</span><span class="rolecard-s" style="display:block">Kunlik test: 10 savol, 10 daqiqa. Streak, XP va reyting.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'<button class="rolecard" data-act="goStudent" style="--rc:rgba(16,201,138,.9);--rcg:linear-gradient(135deg,#34e3b0,#10c98a)"><span class="rolecard-ic">'+I.play+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">O\'quvchilar uchun</span><span class="rolecard-s" style="display:block">Ustoz bergan kod bilan jonli testga qo\'shiling.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'<button class="rolecard" data-act="goTeacher" style="--rc:rgba(168,85,247,.9);--rcg:linear-gradient(135deg,#a78bfa,#d946ef)"><span class="rolecard-ic">'+I.trophy+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">Ustozlar uchun</span><span class="rolecard-s" style="display:block">Jonli xona oching, natijalar va savollar bazasini boshqaring.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'</div>'
+  +(pwa.prompt?'<button class="btn btn-ghost" data-act="installApp" style="width:100%;margin-top:12px">📲 Telefonga o\'rnatish</button>':'')
   +'</div></div>';
 }
 function viewTeacherName(){
@@ -770,7 +778,7 @@ function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);
  var done=(state.history||[]).reduce(function(a,h){return a+(h.attempts||0);},0);
  var sel=state.topic||"all";
  var selName=sel==="all"?"Hammasi":(TOPICS[sel]||"Aralash");
- return '<div class="fade"><div class="top"><button class="icbtn" data-act="backRole">'+I.left+'</button><span class="kicker">'+I.cal+' Yakka mashq</span><span style="margin-left:auto;display:flex;gap:8px">'+mute()+gearBtn()+'</span></div>'
+ return '<div class="fade has-sticky"><div class="top"><button class="icbtn" data-act="backRole">'+I.left+'</button><span class="kicker">'+I.cal+' Yakka mashq</span><span style="margin-left:auto;display:flex;gap:8px">'+mute()+gearBtn()+'</span></div>'
  +'<div class="hero">'
  +'<div class="hero-row"><div><div class="hero-hi">Salom, '+esc(p.name||"")+'! 👋</div><div class="hero-sub">Bugun yangi natijaga erishaylik</div></div>'
  +'<div class="hero-lvl"><div class="hero-lvl-n">'+lv.level+'</div><div class="hero-lvl-l">daraja</div></div></div>'
@@ -782,10 +790,11 @@ function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);
  +'</div></div>'
  +'<div class="sect-h"><span>'+I.bars+' Mavzu</span><span class="sect-tag">'+selName+'</span></div>'
  +topicChips()
+ +'<div class="tcards-hint">'+I.right+' Mavzularni yon tomonga suring</div>'
  +mistakeCard()
  +statsCard()
- +'<button class="btn btn-primary startbtn" data-act="start">'+I.play+' Mashqni boshlash<span class="startbtn-sub">10 savol · 10 daqiqa</span></button>'
- +'</div>';}
+ +'</div>'
+ +'<div class="stickybar"><button class="btn btn-primary startbtn" data-act="start">'+I.play+' Mashqni boshlash<span class="startbtn-sub">'+(sel==="all"?'10 savol · 10 daqiqa':esc(selName)+' · 10 savol · 10 daqiqa')+'</span></button></div>';}
 function viewSettings(){
   var p=state.profile||{};
   return '<div class="fade"><div class="top"><button class="icbtn" data-act="backIntro">'+I.left+'</button><span class="kicker">'+I.gear+' '+tr("Sozlamalar")+'</span></div>'
@@ -980,11 +989,11 @@ function afterResult(){
    else{if(btn)btn.disabled=false;if(lbl)lbl.textContent="Yangi variant tayyor ✅";clearInterval(countInt);}}
  upd();countInt=setInterval(upd,1000);
 }
-function adminTabs(){return '<div style="display:flex;justify-content:center;margin:18px 0 10px"><div class="toggle">'
+function adminTabs(){return '<div style="display:flex;justify-content:center;margin:18px 0 10px"><div class="toggle tabs">'
  +'<button class="'+(state.adminTab==="daily"?"active":"")+'" data-act="tabDaily">Kunlik</button>'
  +'<button class="'+(state.adminTab==="weekly"?"active":"")+'" data-act="tabWeekly">Haftalik</button>'
  +'<button class="'+(state.adminTab==="report"?"active":"")+'" data-act="tabReport">Hisobot</button>'
- +'<button class="'+(state.adminTab==="bank"?"active":"")+'" data-act="tabBank">Savollar bazasi</button>'
+ +'<button class="'+(state.adminTab==="bank"?"active":"")+'" data-act="tabBank">Savollar</button>'
  +'</div></div>';}
 function adminTop(){return '<div class="top"><button class="icbtn" data-act="adminHome" aria-label="Bosh sahifa">'+I.left+'</button><span class="kicker">'+I.trophy+' Ustoz paneli</span><span style="margin-left:auto;display:flex;gap:8px"><button class="icbtn" data-act="refresh">'+I.redo+'</button><button class="btn btn-ghost" data-act="adminLogout" style="padding:8px 14px;font-size:13px">Chiqish</button></span></div>';}
 function viewAdminLogin(){
