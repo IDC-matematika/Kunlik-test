@@ -10,7 +10,8 @@ Hech qanday build talab qilinmaydi: oddiy HTML/CSS/JS, ma'lumotlar Firebase Real
 ## Imkoniyatlar
 
 **O'quvchi uchun**
-- Ro'yxatdan o'tish: ism-familiya va sinf (5–11-sinflar, masalan `9-A`) majburiy — natijalar ustoz hisobotida sinf bo'yicha guruhlanadi
+- **Hisob bilan kirish**: ustoz bergan login (`9a-07`) va parol — streak, XP, tarix, xatolar va statistika bulutda saqlanadi, istalgan qurilmada bir xil
+- **Mehmon rejimi**: hisobsiz mashq — ism-familiya va sinf (5–11) so'raladi, natijalar faqat shu qurilmada
 - Kunlik test: 10 savol, 10 daqiqalik taymer, yechim tahlili
 - 18 ta mavzu bo'yicha tanlash, aralash, adaptiv rejim va "Xatolar daftari"
 - Streak (ketma-ket kunlar), muzlatish, XP va daraja
@@ -26,6 +27,16 @@ Hech qanday build talab qilinmaydi: oddiy HTML/CSS/JS, ma'lumotlar Firebase Real
   - **Hisobot**: sinf va davr bo'yicha natijalar jadvali, mavzular bo'yicha sinf natijasi,
     CSV yuklab olish (o'quvchilar bo'yicha yig'ma yoki barcha urinishlar)
   - savollar bazasi: ID orqali topish, tahrirlash, yashirish, yangi savol qo'shish, import
+  - **Sinflar**: sinf yaratish, o'quvchilar ro'yxatini kiritish — har biriga login va 6 raqamli parol avtomatik beriladi; parollarni ko'rish/yangilash, hisobni o'chirish, ro'yxatni CSV qilib olish
+
+## O'quvchi hisoblari qanday ishlaydi
+
+1. Ustoz panelida **Sinflar** bo'limida sinf yaratadi (masalan `9-A`) va o'quvchilar ismlarini qator-qator kiritadi.
+2. Har bir o'quvchi uchun Firebase Authentication'da hisob yaratiladi: login `9a-01`, `9a-02`, … (ichki email `login@students.kunlik-test.uz`) va 6 raqamli parol. Ustoz ro'yxatni CSV qilib chop etib, o'quvchilarga tarqatadi.
+3. O'quvchi "O'quvchi → Kirish" orqali login va parol bilan kiradi. Ismi va sinfi ro'yxatdan olinadi (o'zi o'zgartira olmaydi); progress `users/<uid>` da saqlanadi va har kirishda yuklanadi. Sessiya qurilmada saqlanib qoladi.
+4. Parolni unutsa — ustoz **Sinflar** bo'limida ko'radi yoki "↻" bilan yangisini beradi. Hisobni o'chirsa, o'quvchi kira olmaydi (natijalari hisobotda qoladi).
+
+Ustoz boshqa hisoblarni yaratishi/o'zgartirishi uchun ilova brauzerda ikkinchi Firebase app nusxasidan foydalanadi — ustozning o'z sessiyasi uzilmaydi. Parollar `studentSecrets/<uid>` da saqlanadi va qoidalar bo'yicha **faqat ustoz** o'qiy oladi; bu parollar faqat shu ilova uchun, shuning uchun o'quvchilarga boshqa joyda ishlatadigan parolini kiritmaslikni ayting.
 
 ## Fayllar tuzilmasi
 
@@ -80,6 +91,9 @@ Savol formati (`data/questions.js`):
 | `results/<uid>` | ustoz va o'quvchining o'zi | o'quvchi faqat o'ziga yangi natija qo'shadi (o'zgartira olmaydi) |
 | `rooms/<kod>` | avtorizatsiyadan o'tgan har kim | xonani faqat yaratgan ustoz; o'quvchi faqat `students/<o'z uid si>` |
 | `admins` | faqat o'z yozuvi | hech kim (faqat konsol) |
+| `users/<uid>` (progress) | o'quvchining o'zi va ustoz | o'quvchining o'zi (ustoz o'chira oladi) |
+| `students`, `classes` | ustoz; o'quvchi faqat o'z yozuvini (`students`), sinflar ro'yxatini hamma avtorizatsiyalangan | faqat ustoz |
+| `studentSecrets` (parollar) | faqat ustoz | faqat ustoz |
 
 ## Ishga tushirish
 
@@ -124,8 +138,8 @@ aks holda o'rnatilgan PWA eski keshlangan fayllarni bir marta ko'rsatishi mumkin
 
 - **Qurilmada (localStorage)**: profil (ism, sinf, streak, XP), kunlik tarix, xatolar daftari,
   statistika (`idc:v3:*` kalitlari). "Sozlamalar → Hammasini tozalash" ularni o'chiradi.
-- **Firebase'da**: reyting (`lb`), test natijalari (`results`), jonli xonalar (`rooms`),
+- **Firebase'da**: o'quvchi hisoblari (`students`, `classes`, `studentSecrets`) va progressi (`users`), reyting (`lb`), test natijalari (`results`), jonli xonalar (`rooms`),
   ustoz qo'shgan/tahrirlagan savollar (`bank`, `overrides`) va sozlamalar (`config`).
 
-O'quvchi anonim tarzda kiradi, shuning uchun brauzer ma'lumotlari tozalansa u hisobotda
-yangi o'quvchi sifatida ko'rinadi.
+Hisob bilan kirgan o'quvchining progressi bulutda; mehmon esa anonim — brauzer ma'lumotlari tozalansa
+hisobotda yangi o'quvchi sifatida ko'rinadi.

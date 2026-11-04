@@ -114,7 +114,7 @@ body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .delx{flex:0 0 auto;width:32px;height:32px;border-radius:11px;border:1px solid var(--line);background:var(--paper2);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
 .delx:hover{background:var(--red-bg);transform:translateY(-1px)}
 svg.lic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));max-width:calc(100% - 36px);text-align:center;transform:translateX(-50%);background:#241a3f;color:#fff;padding:12px 20px;border-radius:14px;font-size:14px;font-weight:700;z-index:70;animation:pop .35s both;box-shadow:0 18px 40px -12px rgba(0,0,0,.65);border:1px solid rgba(168,85,247,.4);}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));max-width:calc(100% - 36px);text-align:center;pointer-events:none;transform:translateX(-50%);background:#241a3f;color:#fff;padding:12px 20px;border-radius:14px;font-size:14px;font-weight:700;z-index:70;animation:pop .35s both;box-shadow:0 18px 40px -12px rgba(0,0,0,.65);border:1px solid rgba(168,85,247,.4);}
 .hero{background:linear-gradient(150deg,#ffffff 0%,#faf6ff 100%);border-radius:28px;padding:22px 22px 20px;margin-top:14px;box-shadow:0 34px 60px -32px rgba(80,20,140,.9);border:1px solid rgba(255,255,255,.7);position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;top:-50px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(closest-side,rgba(168,85,247,.2),transparent 70%);pointer-events:none}
 .hero-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
@@ -261,3 +261,22 @@ body.dark .statcard-s{color:#93b8ee}
   .startbtn::after,.gbtn::after{display:none}
   .fade{animation-duration:.01s}
 }
+/* ===== O'quvchi hisobi ===== */
+.livecard{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,#e6fbf6,#fff);border:1.5px solid #bfeee0;border-radius:20px;padding:16px 18px;margin-top:14px;cursor:pointer;transition:all .16s}
+.livecard:hover{transform:translateY(-3px);box-shadow:0 18px 30px -16px rgba(16,201,138,.6)}
+.livecard-ic{font-size:26px;flex:0 0 auto}
+.livecard-t{font-family:Montserrat,sans-serif;font-weight:800;font-size:16px;color:var(--ink)}
+.livecard-s{color:#1f8f66;font-size:13px;margin-top:2px}
+.livecard-go{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px -8px rgba(16,201,138,.9)}
+body.dark .livecard{background:linear-gradient(135deg,#1e3a33,var(--paper));border-color:#2c5a4a}
+body.dark .livecard-s{color:#6fe0b8}
+.acctnote{margin-top:14px;font-size:13px;color:rgba(255,255,255,.85);text-align:center;line-height:1.5}
+.linkbtn{font-family:inherit;font-weight:800;font-size:13px;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:4px 12px;cursor:pointer}
+.linkbtn:hover{background:rgba(255,255,255,.3)}
+code.login{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:var(--paper2);border:1px solid var(--line);border-radius:7px;padding:2px 7px;color:var(--ink);letter-spacing:.3px;white-space:nowrap}
+.hero-sub code,.setsub code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--paper2);border-radius:6px;padding:1px 6px}
+.tchip .cnt2{display:inline-block;background:rgba(0,0,0,.08);border-radius:99px;padding:0 7px;font-size:11px;margin-left:3px}
+.tchip.on .cnt2{background:rgba(255,255,255,.25)}
+body.dark .tchip{background:var(--paper);color:var(--ink)}
+/* Yopishqoq panel bo'lgan ekranda toast panel ustida chiqadi */
+body:has(.stickybar) .toast{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
