@@ -73,19 +73,20 @@ function renderQ(s){
 }
 function fracify(str){return String(str).replace(/(?<!\d)(\d{1,3})\/(\d{1,3})(?!\d)(?![^<]*>)/g,function(m,a,b){return '<span class="frac"><span class="fr-n">'+a+'</span><span class="fr-d">'+b+'</span></span>';});}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-function lbPush(id,name,score,cls){if(!fbdb)return;whenAuth().then(function(){var uid=authUid();if(!uid)return;try{var ex=cls?{cls:cls}:{};fbdb.ref("lb/daily/"+today.key+"/"+id).update(Object.assign(ex,{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score),attempts:firebase.database.ServerValue.increment(1)})).catch(function(){});var wk=weekKey(today.key);fbdb.ref("lb/weekly/"+wk+"/"+id).update(Object.assign(cls?{cls:cls}:{},{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score)})).catch(function(){});}catch(e){}});}
+function lbPush(id,name,score,cls){if(!fbdb)return;whenAuth().then(function(){var uid=liveUid();try{var ex=cls?{cls:cls}:{};fbdb.ref("lb/daily/"+today.key+"/"+id).update(Object.assign(ex,{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score),attempts:firebase.database.ServerValue.increment(1)})).catch(function(){});var wk=weekKey(today.key);fbdb.ref("lb/weekly/"+wk+"/"+id).update(Object.assign(cls?{cls:cls}:{},{name:name,uid:uid,ts:firebase.database.ServerValue.TIMESTAMP,correct:firebase.database.ServerValue.increment(score)})).catch(function(){});}catch(e){}});}
 function lbLoadDaily(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("lb/daily/"+today.key).once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>null);}
 function lbLoadWeekly(){if(!fbdb)return Promise.resolve(null);var wk=weekKey(today.key);return fbdb.ref("lb/weekly/"+wk).once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>null);}
 function loadBank(){if(!fbdb)return Promise.resolve([]);return fbdb.ref("bank").once("value").then(s=>{var o=s.val()||{};return Object.keys(o).map(k=>Object.assign({id:k},o[k]));}).catch(()=>[]);}
 function loadConfig(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("config/cooldownMin").once("value").then(s=>s.val()).catch(()=>null);}
 function loadSeeded(){if(!fbdb)return Promise.resolve(false);return fbdb.ref("config/seeded").once("value").then(function(s){return s.val()===true;}).catch(function(){return false;});}
-/* Har bir test natijasi: results/<auth uid>/<push id> — ustoz hisoboti uchun (faqat o'zi yozadi, faqat ustoz o'qiydi) */
+/* Har bir test natijasi: results/<uid>/<push id> — ustoz hisoboti uchun (faqat o'zi yozadi, faqat ustoz o'qiydi).
+   uid — anonim auth identifikatori; auth hali yoqilmagan bo'lsa, qurilmadagi idc_uid (liveUid) ishlatiladi. */
 function resultPush(r,qs,sels){
   if(!fbdb)return;
   var tp={};(qs||[]).forEach(function(Q,i){if(!Q)return;var k=/^m\d+$/.test(Q.topic||"")?Q.topic:"aralash";var e=tp[k]||(tp[k]={c:0,t:0});e.t++;if(sels[i]===Q.correct)e.c++;});
   var rec={name:String(r.name||"Mehmon").slice(0,40),cls:String(r.cls||"").slice(0,12),date:today.key,ts:firebase.database.ServerValue.TIMESTAMP,score:r.score,total:r.total,mode:r.mode,topics:tp};
   if(r.pid)rec.pid=String(r.pid).slice(0,40);if(r.room)rec.room=String(r.room);if(typeof r.elapsed==="number")rec.elapsed=r.elapsed;
-  whenAuth().then(function(){var uid=authUid();if(!uid)return;try{fbdb.ref("results/"+uid).push(rec).catch(function(){});}catch(e){}});
+  whenAuth().then(function(){try{fbdb.ref("results/"+liveUid()).push(rec).catch(function(){});}catch(e){}});
 }
 function loadResults(){if(!fbdb)return Promise.resolve(null);return fbdb.ref("results").once("value").then(function(s){var o=s.val()||{},out=[];Object.keys(o).forEach(function(uid){var u=o[uid]||{};Object.keys(u).forEach(function(k){var r=u[k];if(r&&typeof r.score==="number")out.push(Object.assign({uid:uid,key:k},r));});});return out;}).catch(function(){return null;});}
 function bankAdd(q){if(!fbdb)return Promise.resolve(false);return fbdb.ref("bank").push(q).then(()=>true).catch(()=>false);}
@@ -172,6 +173,12 @@ var RU={
 "kun ketma-ket":"дней подряд",
 "jami XP":"всего XP",
 "Mavzu":"Тема",
+"Kunlik test: 10 savol, 10 daqiqa. Streak, XP va reyting.":"Ежедневный тест: 10 вопросов, 10 минут. Серия, XP и рейтинг.",
+"Ustoz bergan kod bilan jonli testga qo'shiling.":"Присоединяйтесь к живому тесту по коду учителя.",
+"Jonli xona oching, natijalar va savollar bazasini boshqaring.":"Откройте живую комнату, управляйте результатами и базой вопросов.",
+"Mavzularni yon tomonga suring":"Листайте темы в сторону",
+"Savollar topilmadi":"Вопросы не найдены",
+"Savollar":"Вопросы",
 "Hammasi":"Все",
 "Mashqni boshlash":"Начать тренировку",
 "10 savol · 10 daqiqa":"10 вопросов · 10 минут",
@@ -512,12 +519,14 @@ function liveRenderTeacherStudents(){
 function viewRolePick(){
   return '<div class="fade" style="min-height:440px;display:flex;flex-direction:column;justify-content:center">'
   +'<div style="text-align:center;margin-bottom:26px"><div style="display:inline-flex">'+wordmark(1.1,1)+'</div></div>'
-  +'<div class="card" style="padding:24px">'
-  +'<h1 class="disp" style="font-size:23px;font-weight:800;margin:0 0 18px;text-align:center">Rejimni tanlang</h1>'
-  +'<button class="btn btn-primary gbtn" data-act="goTeacher" style="width:100%;margin-bottom:12px;padding:16px;--gc:rgba(217,70,239,.6)">'+I.trophy+' Ustozlar uchun</button>'
-  +'<button class="btn btn-green gbtn" data-act="goStudent" style="width:100%;margin-bottom:12px;padding:16px;--gc:rgba(16,201,138,.6);animation-delay:.35s">'+I.play+' O\'quvchilar uchun</button>'
-  +(pwa.prompt?'<button class="btn btn-ghost" data-act="installApp" style="width:100%;margin-top:14px">📲 Telefonga o\'rnatish</button>':'')
-  +'<button class="btn gbtn" data-act="goSolo" style="width:100%;padding:14px;background:linear-gradient(135deg,#fbbf24,#fb923c,#f97316);color:#fff;border:none;--gc:rgba(251,146,60,.7);animation-delay:.7s">Yakka mashq (o\'zim uchun)</button>'
+  +'<div class="card" style="padding:18px 16px">'
+  +'<h1 class="disp" style="font-size:22px;font-weight:800;margin:4px 0 14px;text-align:center">Rejimni tanlang</h1>'
+  +'<div style="display:flex;flex-direction:column;gap:10px">'
+  +'<button class="rolecard" data-act="goSolo" style="--rc:rgba(251,146,60,.9);--rcg:linear-gradient(135deg,#fbbf24,#f97316)"><span class="rolecard-ic">'+I.flame+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">Yakka mashq</span><span class="rolecard-s" style="display:block">Kunlik test: 10 savol, 10 daqiqa. Streak, XP va reyting.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'<button class="rolecard" data-act="goStudent" style="--rc:rgba(16,201,138,.9);--rcg:linear-gradient(135deg,#34e3b0,#10c98a)"><span class="rolecard-ic">'+I.play+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">O\'quvchilar uchun</span><span class="rolecard-s" style="display:block">Ustoz bergan kod bilan jonli testga qo\'shiling.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'<button class="rolecard" data-act="goTeacher" style="--rc:rgba(168,85,247,.9);--rcg:linear-gradient(135deg,#a78bfa,#d946ef)"><span class="rolecard-ic">'+I.trophy+'</span><span style="flex:1;min-width:0"><span class="rolecard-t">Ustozlar uchun</span><span class="rolecard-s" style="display:block">Jonli xona oching, natijalar va savollar bazasini boshqaring.</span></span><span class="rolecard-go">'+I.right+'</span></button>'
+  +'</div>'
+  +(pwa.prompt?'<button class="btn btn-ghost" data-act="installApp" style="width:100%;margin-top:12px">📲 Telefonga o\'rnatish</button>':'')
   +'</div></div>';
 }
 function viewTeacherName(){
@@ -563,8 +572,8 @@ function viewStudentJoin(){
   +'<div class="card" style="padding:24px">'
   +'<h1 class="disp" style="font-size:22px;font-weight:800;margin:0 0 6px">Testga kirish</h1>'
   +'<p style="color:var(--ink2);font-size:14px;margin-bottom:16px">Ustozingiz bergan kodni va ismingizni kiriting.</p>'
-  +'<input id="sName" class="input" placeholder="Ismingiz" maxlength="24" style="margin-bottom:12px">'
-  +'<input id="sCls" class="input" placeholder="Sinf (ixtiyoriy), masalan: 9-A" maxlength="12" style="margin-bottom:12px">'
+  +'<input id="sName" class="input" placeholder="Ism va familiya" maxlength="28" autocomplete="name" value="'+escAttr((state.profile&&state.profile.name)||"")+'" style="margin-bottom:12px">'
+  +'<div style="margin:-10px 0 12px">'+clsPicker("join",state.profile&&state.profile.cls)+'</div>'
   +'<input id="sCode" class="input" placeholder="6 raqamli kod" maxlength="6" inputmode="numeric" style="letter-spacing:4px;text-align:center;font-size:20px;font-weight:700">'
   +'<button class="btn btn-green" data-act="joinRoom" style="width:100%;margin-top:16px">Qo\'shilish '+I.right+'</button>'
   +'</div></div>';
@@ -641,11 +650,34 @@ function routeStudent(){
   var att=LS.get(K.attempt),last=LS.get(K.last);
   if(last)state.result=last;
   if(att&&att.date===today.key&&att.questions){state.variant=enrichBank(att.questions);state.selections=att.selections||Array(10).fill(null);state.current=att.current||0;state.startedAt=att.startedAt;state.submitted=false;state.adaptiveRun=!!att.adaptiveRun;state.adaptLevel=att.adaptLevel||2;state.adaptTarget=att.adaptTarget||10;state.weakTopic=att.weakTopic||{};state.adaptive=!!att.adaptiveRun;state.phase="quiz";render();return;}
-  state.phase=(state.profile&&state.profile.name)?"intro":"rolePick";render();
+  state.phase=isRegistered(state.profile)?"intro":(state.profile&&state.profile.name?"name":"rolePick");render();
 }
 function persistAttempt(){LS.set(K.attempt,{date:today.key,startedAt:state.startedAt,questions:state.variant,selections:state.selections,current:state.current,adaptiveRun:state.adaptiveRun,adaptLevel:state.adaptLevel,adaptTarget:state.adaptTarget,weakTopic:state.weakTopic});}
 function normCls(v){return String(v||"").trim().replace(/\s+/g," ").toUpperCase().slice(0,12);}
-function saveName(){var v=(document.getElementById("nameI").value||"").trim();var ce=document.getElementById("clsI");var p={id:genId(),name:v||"Mehmon",cls:normCls(ce&&ce.value),streak:0,bestStreak:0,lastDate:null,totalXP:0,freezes:1};state.profile=p;LS.set(K.profile,p);state.phase="intro";render();}
+/* Ro'yxatdan o'tish: ism va sinf majburiy. Sinf "9-A" ko'rinishida saqlanadi (raqam + ixtiyoriy harf),
+   shunda ustoz hisobotida bir sinf o'quvchilari bitta guruhga tushadi. */
+var CLS_MIN=5,CLS_MAX=11;
+function validCls(c){var g=+splitCls(c).g;return g>=CLS_MIN&&g<=CLS_MAX;}
+function isRegistered(p){return !!(p&&p.name&&p.cls&&validCls(p.cls));}
+function splitCls(c){var m=String(c||"").match(/^(\d{1,2})(?:\s*-?\s*(.*))?$/);return m?{g:m[1],l:(m[2]||"").trim()}:{g:"",l:""};}
+function clsPicker(pre,cls,mt){
+  var c=splitCls(cls),opts='<option value="">Sinf…</option>';
+  for(var i=CLS_MIN;i<=CLS_MAX;i++)opts+='<option value="'+i+'"'+(String(i)===c.g?' selected':'')+'>'+i+'-sinf</option>';
+  return '<div style="display:flex;gap:10px;margin-top:'+(mt||10)+'px"><select id="'+pre+'G" class="input" style="flex:1.3;min-width:0" aria-label="Sinf">'+opts+'</select>'
+  +'<input id="'+pre+'L" class="input" style="flex:1;min-width:0;text-transform:uppercase" maxlength="3" placeholder="Harfi: A, B…" value="'+escAttr(c.l)+'" aria-label="Sinf harfi"></div>';
+}
+function readCls(pre){
+  var g=(document.getElementById(pre+"G")||{}).value||"";if(!g||+g<CLS_MIN||+g>CLS_MAX)return null;
+  var l=String((document.getElementById(pre+"L")||{}).value||"").toUpperCase().replace(/[^A-ZА-ЯЁЎҚҒҲʻ']/g,"").slice(0,3);
+  return l?g+"-"+l:g;
+}
+function saveName(){
+  var v=(document.getElementById("nameI").value||"").trim().replace(/\s+/g," ");
+  if(v.length<2){flash("Ism va familiyangizni yozing");var e=document.getElementById("nameI");if(e)e.focus();return;}
+  var cls=readCls("reg");if(!cls){flash("Sinfingizni tanlang");return;}
+  var p=state.profile&&state.profile.id?state.profile:{id:genId(),streak:0,bestStreak:0,lastDate:null,totalXP:0,freezes:1};
+  p.name=v;p.cls=cls;state.profile=p;LS.set(K.profile,p);state.phase="intro";render();
+}
 function startVariant(){
   if(state.result&&Date.now()<nextAllowedTs()){flash(tr("Keyingi variant")+": "+fmt(Math.ceil((nextAllowedTs()-Date.now())/1000)));return;}
   ac();state.submitted=false;state.counted=false;state.confetti=false;state.onlyMistakes=false;state.mistakeMode=false;state.adaptiveRun=false;
@@ -738,16 +770,16 @@ function render(){
 function viewName(){return '<div class="fade" style="min-height:440px;display:flex;flex-direction:column;justify-content:center">'
  +'<div class="top"><button class="icbtn" data-act="backRole">'+I.left+'</button><span class="kicker">Yakka mashq</span></div>'
  +'<div style="text-align:center;margin-bottom:22px"><div style="display:inline-flex">'+wordmark(1.1,1)+'</div></div>'
- +'<div class="card" style="padding:22px"><h1 class="disp" style="font-size:24px;font-weight:800;margin:0 0 6px">Ismingiz nima?</h1>'
- +'<p style="color:var(--ink2);font-size:14.5px;margin-bottom:18px">Bu ism natija va reytingda ko\'rinadi.</p>'
- +'<input id="nameI" class="input" placeholder="Masalan: Diyor" maxlength="24">'
- +'<input id="clsI" class="input" placeholder="Sinfingiz (ixtiyoriy), masalan: 9-A" maxlength="12" style="margin-top:10px">'
+ +'<div class="card" style="padding:22px"><h1 class="disp" style="font-size:24px;font-weight:800;margin:0 0 6px">Ro\'yxatdan o\'tish</h1>'
+ +'<p style="color:var(--ink2);font-size:14.5px;margin-bottom:18px">'+(state.profile&&state.profile.name?'Davom etish uchun sinfingizni ko\'rsating.':'Ism va sinfingiz natija, reyting va ustoz hisobotida ko\'rinadi.')+'</p>'
+ +'<input id="nameI" class="input" placeholder="Ism va familiya, masalan: Diyor Karimov" maxlength="28" autocomplete="name" value="'+escAttr((state.profile&&state.profile.name)||"")+'">'
+ +clsPicker("reg",state.profile&&state.profile.cls)
  +'<button class="btn btn-primary" data-act="saveName" style="width:100%;margin-top:18px">Davom etish '+I.right+'</button></div></div>';}
 function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);var p=state.profile||{};
  var done=(state.history||[]).reduce(function(a,h){return a+(h.attempts||0);},0);
  var sel=state.topic||"all";
  var selName=sel==="all"?"Hammasi":(TOPICS[sel]||"Aralash");
- return '<div class="fade"><div class="top"><button class="icbtn" data-act="backRole">'+I.left+'</button><span class="kicker">'+I.cal+' Yakka mashq</span><span style="margin-left:auto;display:flex;gap:8px">'+mute()+gearBtn()+'</span></div>'
+ return '<div class="fade has-sticky"><div class="top"><button class="icbtn" data-act="backRole">'+I.left+'</button><span class="kicker">'+I.cal+' Yakka mashq</span><span style="margin-left:auto;display:flex;gap:8px">'+mute()+gearBtn()+'</span></div>'
  +'<div class="hero">'
  +'<div class="hero-row"><div><div class="hero-hi">Salom, '+esc(p.name||"")+'! 👋</div><div class="hero-sub">Bugun yangi natijaga erishaylik</div></div>'
  +'<div class="hero-lvl"><div class="hero-lvl-n">'+lv.level+'</div><div class="hero-lvl-l">daraja</div></div></div>'
@@ -759,10 +791,11 @@ function viewIntro(){var lv=levelInfo(state.profile?state.profile.totalXP||0:0);
  +'</div></div>'
  +'<div class="sect-h"><span>'+I.bars+' Mavzu</span><span class="sect-tag">'+selName+'</span></div>'
  +topicChips()
+ +'<div class="tcards-hint">'+I.right+' Mavzularni yon tomonga suring</div>'
  +mistakeCard()
  +statsCard()
- +'<button class="btn btn-primary startbtn" data-act="start">'+I.play+' Mashqni boshlash<span class="startbtn-sub">10 savol · 10 daqiqa</span></button>'
- +'</div>';}
+ +'</div>'
+ +'<div class="stickybar"><button class="btn btn-primary startbtn" data-act="start">'+I.play+' Mashqni boshlash<span class="startbtn-sub">'+(sel==="all"?'10 savol · 10 daqiqa':esc(selName)+' · 10 savol · 10 daqiqa')+'</span></button></div>';}
 function viewSettings(){
   var p=state.profile||{};
   return '<div class="fade"><div class="top"><button class="icbtn" data-act="backIntro">'+I.left+'</button><span class="kicker">'+I.gear+' '+tr("Sozlamalar")+'</span></div>'
@@ -777,7 +810,7 @@ function viewSettings(){
   +'<div class="card" style="padding:22px;margin-bottom:14px">'
   +'<div class="setlbl" style="margin-bottom:10px">'+tr("Ismni o'zgartirish")+'</div>'
   +'<input id="setName" class="input" maxlength="28" value="'+esc(p.name||"")+'" placeholder="Ismingiz">'
-  +'<input id="setCls" class="input" maxlength="12" value="'+escAttr(p.cls||"")+'" placeholder="Sinf (masalan: 9-A)" style="margin-top:10px">'
+  +clsPicker("set",p.cls)
   +'<button class="btn btn-primary" data-act="doRename" style="width:100%;margin-top:12px;height:54px;border-radius:18px">'+tr("Saqlash")+'</button>'
   +'</div>'
   +'<div class="card" style="padding:22px">'
@@ -790,7 +823,8 @@ function doRename(){
   var el=document.getElementById("setName"); if(!el)return;
   var v=(el.value||"").trim(); if(!v){flash(tr("Ismingizni yozing"));return;}
   var p=state.profile||{id:genId(),streak:0,bestStreak:0,lastDate:null,totalXP:0,freezes:1};
-  p.name=v; var ce=document.getElementById("setCls"); if(ce)p.cls=normCls(ce.value); state.profile=p; LS.set(K.profile,p);
+  var cls=readCls("set"); if(!cls){flash("Sinfingizni tanlang");return;}
+  p.name=v; p.cls=cls; state.profile=p; LS.set(K.profile,p);
   flash(tr("Saqlandi")); state.phase="intro"; render();
 }
 function clearData(){
@@ -956,11 +990,11 @@ function afterResult(){
    else{if(btn)btn.disabled=false;if(lbl)lbl.textContent="Yangi variant tayyor ✅";clearInterval(countInt);}}
  upd();countInt=setInterval(upd,1000);
 }
-function adminTabs(){return '<div style="display:flex;justify-content:center;margin:18px 0 10px"><div class="toggle">'
+function adminTabs(){return '<div style="display:flex;justify-content:center;margin:18px 0 10px"><div class="toggle tabs">'
  +'<button class="'+(state.adminTab==="daily"?"active":"")+'" data-act="tabDaily">Kunlik</button>'
  +'<button class="'+(state.adminTab==="weekly"?"active":"")+'" data-act="tabWeekly">Haftalik</button>'
  +'<button class="'+(state.adminTab==="report"?"active":"")+'" data-act="tabReport">Hisobot</button>'
- +'<button class="'+(state.adminTab==="bank"?"active":"")+'" data-act="tabBank">Savollar bazasi</button>'
+ +'<button class="'+(state.adminTab==="bank"?"active":"")+'" data-act="tabBank">Savollar</button>'
  +'</div></div>';}
 function adminTop(){return '<div class="top"><button class="icbtn" data-act="adminHome" aria-label="Bosh sahifa">'+I.left+'</button><span class="kicker">'+I.trophy+' Ustoz paneli</span><span style="margin-left:auto;display:flex;gap:8px"><button class="icbtn" data-act="refresh">'+I.redo+'</button><button class="btn btn-ghost" data-act="adminLogout" style="padding:8px 14px;font-size:13px">Chiqish</button></span></div>';}
 function viewAdminLogin(){
@@ -980,7 +1014,7 @@ function doAdminLogin(){
  var e=(document.getElementById("admEmail").value||"").trim(),p=document.getElementById("admPass").value||"";
  if(!e||!p){flash("Email va parolni kiriting");return;}
  if(!fbauth){flash("Firebase yuklanmadi");return;}
- fbauth.signInWithEmailAndPassword(e,p).catch(function(err){var c=(err&&err.code)||"";flash(/password|credential|user-not-found/.test(c)?"Email yoki parol noto'g'ri":"Kirishda xato: "+c);});
+ fbauth.signInWithEmailAndPassword(e,p).catch(function(err){var c=(err&&err.code)||"";flash(/password|credential|user-not-found/.test(c)?"Email yoki parol noto'g'ri":(/operation-not-allowed/.test(c)?"Firebase konsolida Authentication → Email/Password usulini yoqing":(/network/.test(c)?"Internet aloqasi yo'q":"Kirishda xato: "+c)));});
 }
 function doAdminLogout(){if(fbauth)fbauth.signOut();state.phase="adminLogin";render();}
 function viewAdmin(){
@@ -1301,7 +1335,7 @@ app.addEventListener("click",function(e){
  else if(a==="adminLogout")doAdminLogout();
  else if(a==="adminHome"){location.href=location.pathname;}
  else if(a==="goStudent"){state.phase="studentJoin";render();}
- else if(a==="goSolo"){state.phase=state.profile&&state.profile.name?"intro":"name";render();}
+ else if(a==="goSolo"){state.phase=isRegistered(state.profile)?"intro":"name";render();}
  else if(a==="backRole"){state.phase="rolePick";render();}
  else if(a==="goHome"){state.phase="rolePick";render();}
  else if(a==="setTopic"){state.topic=t.dataset.val;render();}
@@ -1316,7 +1350,7 @@ app.addEventListener("click",function(e){
  else if(a==="createRoom"){live.name=(document.getElementById("tName").value||"").trim()||"Ustoz";liveTeacherCreate();}
  else if(a==="startLive")liveTeacherStart();
  else if(a==="finishLive")liveTeacherFinish();
- else if(a==="joinRoom"){live.cls=normCls((document.getElementById("sCls")||{}).value);liveStudentJoin(document.getElementById("sCode").value,document.getElementById("sName").value);}
+ else if(a==="joinRoom"){live.cls=readCls("join");if(!live.cls){flash("Sinfingizni tanlang");return;}liveStudentJoin(document.getElementById("sCode").value,document.getElementById("sName").value);}
  else if(a==="lchoose")liveChoose(parseInt(t.dataset.val,10));
  else if(a==="lnext")liveNav(1);
  else if(a==="lprev")liveNav(-1);
