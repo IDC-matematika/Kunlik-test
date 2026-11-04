@@ -44,7 +44,8 @@ Ustoz boshqa hisoblarni yaratishi/o'zgartirishi uchun ilova brauzerda ikkinchi F
 index.html              sahifa karkasi, Firebase SDK va skriptlarni ulash
 style.css               barcha uslublar
 app.js                  ilova kodi (auth, test, statistika, jonli xona, ustoz paneli)
-data/questions.js       BUILTIN — asosiy savollar bazasi (1000 savol)
+data/questions.js       BUILTIN — asosiy savollar bazasi (1572 savol)
+Yangilangan.pdf         "Majburiy matematika" darsligi — bazaning manbasi va namunasi
 data/questions-ru.js    savollarning ruscha tarjimalari va eskirgan savollar xeshlari
 img/                    logotip va PWA ikonlari
 manifest.json           PWA manifesti
@@ -61,6 +62,20 @@ Savol formati (`data/questions.js`):
 ```
 
 `id` — `<mavzu raqami>-<tartib raqami>`, doimiy bo'lishi kerak (statistika va ustoz tahrirlari shunga bog'langan).
+
+### Baza va darslik
+
+Baza "Majburiy matematika" darsligi (`Yangilangan.pdf`) asosida tuzilgan: har mavzuning
+"Mavzu bo'yicha test savollari" (2 variant × 10) va kitob oxiridagi 30 ta imtihon varianti
+(10 tadan savol) to'liq bazada — yechimlari bilan; takrorlanganlari bir marta kiritilgan.
+Qolgan savollar ham kitob testlari darajasida (1–3 bosqichli, matnli masalalar, chizmalar).
+Yangi savol qo'shganda shu darajani saqlang: bir amalli "0,6 · 5 ni hisoblang" kabi
+savollar kiritilmaydi.
+
+Savol matni o'zgartirilsa, eski matn xeshi `data/questions-ru.js` dagi `RETIRED_Q` ga
+qo'shiladi (Firebase bankidagi eski nusxalar testga chiqmasligi uchun) — buni
+`scratchpad/bankops.py` uslubidagi skript avtomatik qiladi; ruscha tarjima (`QRU`) esa
+qayta yozilishi kerak.
 
 ## Firebase'ni sozlash
 
